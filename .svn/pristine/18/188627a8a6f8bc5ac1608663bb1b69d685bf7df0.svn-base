@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace EAUtils
+{
+    class Json2EAClass
+    {
+        dynamic json;
+
+        public void go(string jsonString, EA.Package package)
+        {
+            json = Newtonsoft.Json.Linq.JObject.Parse(jsonString);
+
+            if( json.data != null)
+            {
+                
+            }
+        }
+    }
+}

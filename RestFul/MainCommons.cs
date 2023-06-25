@@ -1,0 +1,144 @@
+﻿using EA;
+using RestFul.ui;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace RestFul
+{
+    /// <summary>
+    /// Responsable por el comportamiento de la presentación de las opciones de menú y los métodos básicos.
+    /// </summary>
+    public class MainCommons : MainUtils
+    {
+        protected SwaggerEditor editor;
+
+        const string menuHeader = "-&RestFul";
+
+        protected ViewJSON        viewJSON;
+        protected SwaggerEditor   swaggerEditor;
+        protected SwaggerPrincipal swaggerPrincipal;
+
+        protected EAUtils.EAUtils eaUtils = new EAUtils.EAUtils();
+
+        protected string ITEM_MENU__GENERAR_ABM = Properties.Resources.ITEM_MENU__GENERAR_ABM;
+        protected string ITEM_MENU__GENERAR_DESDE_RESUMEN = Properties.Resources.ITEM_MENU__GENERAR_DESDE_RESUMEN;
+        protected string ITEM_MENU__MAPPING = Properties.Resources.ITEM_MENU__MAPPING;
+        protected string ITEM_MENU_SWAGGER_MENU = Properties.Resources.ITEM_MENU_SWAGGER_MENU;
+        //private const string ITEM_MENU_SWAGGER_MENU__VER = "Ver datos swagger";
+        protected string ITEM_MENU_SWAGGER_MENU__GENERAR = Properties.Resources.ITEM_MENU_SWAGGER_MENU__GENERAR;
+        protected string ITEM_MENU_SWAGGER_MENU__INVERSA = Properties.Resources.ITEM_MENU_SWAGGER_MENU__INVERSA;
+        protected string ITEM_MENU_SWAGGER_EDITOR = Properties.Resources.ITEM_MENU_SWAGGER_EDITOR;
+        //private string[] ITEM_MENU_SWAGGER_SUBMENU = { ITEM_MENU_SWAGGER_MENU__VER , ITEM_MENU_SWAGGER_MENU__GENERAR, ITEM_MENU_SWAGGER_MENU__INVERSA };
+        protected string[] ITEM_MENU_SWAGGER_SUBMENU = { Properties.Resources.ITEM_MENU_SWAGGER_EDITOR, Properties.Resources.ITEM_MENU_SWAGGER_MENU__GENERAR, Properties.Resources.ITEM_MENU_SWAGGER_MENU__INVERSA };
+        protected string ITEM_MENU__GENERAR_TBF = Properties.Resources.ITEM_MENU__GENERAR_TBF;
+
+        public String EA_Connect(EA.Repository Repository)
+        {
+            // No special processing req'd
+
+            return "RestFul";
+        }
+        protected bool isProjectOpen(EA.Repository Repository)
+        {
+            try
+            {
+                EA.Collection c = Repository.Models;
+
+                eaUtils.setRepositorio(Repository);
+                eaUtils.createOutput("Restful");
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public void EA_ShowHelp(EA.Repository Repository, string Location, string MenuName, string ItemName)
+        {
+            MessageBox.Show("Help for: " + MenuName + "/" + ItemName);
+        }
+
+        public object EA_GetMenuItems(EA.Repository Repository, string Location, string MenuName)
+        {
+            if (MenuName == "")
+            {
+                return menuHeader;
+            }
+            else if (MenuName == menuHeader)
+            {
+                string[] ar = {
+                    ITEM_MENU__GENERAR_DESDE_RESUMEN
+                    , ITEM_MENU__GENERAR_ABM, ITEM_MENU__MAPPING, "-", "-" + ITEM_MENU_SWAGGER_MENU
+                    , ITEM_MENU__GENERAR_TBF
+                };
+
+                return ar;
+            }
+            else if (MenuName == "-" + ITEM_MENU_SWAGGER_MENU)
+            {
+                return ITEM_MENU_SWAGGER_SUBMENU;
+            }
+            return "";
+        }
+
+        public void EA_GetMenuState(EA.Repository repository, string location, string menuName, string itemName, ref bool isEnabled, ref bool isChecked)
+        {
+            if (isProjectOpen(repository))
+            {
+                //if( ItemName == ITEM_MENU_SWAGGER_MENU__VER)
+                isEnabled = true;
+                if (itemName == ITEM_MENU__GENERAR_DESDE_RESUMEN)
+                {
+                    if (location == "TreeView")
+                    {
+                        Package package = repository.GetTreeSelectedPackage();
+                        if (package != null && (package.Name == "Resumen" || package.Name == "Summary"))
+                        {
+                            isEnabled = true;
+                        }
+                        else
+                        {
+                            isEnabled = false;
+                        }
+                    }
+                }
+                
+                else if (itemName == ITEM_MENU_SWAGGER_EDITOR)
+                {
+                    isEnabled = this.getSwaggerClassSelected(repository, location) != null;
+                }
+                
+                else if (itemName == ITEM_MENU__GENERAR_ABM)
+                {
+                    isEnabled = true;
+                }
+                else if (itemName == ITEM_MENU_SWAGGER_MENU__GENERAR)
+                {
+                    isEnabled = this.getSwaggerClassSelected(repository, location) != null;
+                }
+                else if (itemName == ITEM_MENU__MAPPING)
+                {
+                    isEnabled = true;
+                }
+                else if (itemName == ITEM_MENU_SWAGGER_MENU__INVERSA)
+                {
+                    isEnabled = this.getSwaggerClassSelected(repository, location) != null;
+                }
+                else if (itemName == ITEM_MENU__GENERAR_TBF)
+                {
+                    isEnabled = this.resourceSelected(repository, location) != null;
+                }
+                
+                }
+            else
+                // If no open project, disable all menu options
+                isEnabled = false;
+        }
+
+    }
+}

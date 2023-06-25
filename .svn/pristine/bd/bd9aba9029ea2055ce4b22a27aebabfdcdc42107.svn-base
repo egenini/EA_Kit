@@ -1,0 +1,900 @@
+﻿namespace RestFul
+{
+    partial class SwaggerEditor
+    {
+        
+        /// <summary> 
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.form_tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.control_tabPrincipal = new System.Windows.Forms.TabControl();
+            this.control_tabPage_info = new System.Windows.Forms.TabPage();
+            this.tab_principal_tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.documentos_expernos_tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.control_listBox_documentos_externos = new System.Windows.Forms.ListBox();
+            this.control_label_documentos_externos = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.control_groupBox_esquemas = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.control_checkBox_wss = new System.Windows.Forms.CheckBox();
+            this.control_checkBox_ws = new System.Windows.Forms.CheckBox();
+            this.control_checkBox_https = new System.Windows.Forms.CheckBox();
+            this.control_checkBox_http = new System.Windows.Forms.CheckBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.control_textBox_basePath = new System.Windows.Forms.TextBox();
+            this.control_label_basePath = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.control_label_host = new System.Windows.Forms.Label();
+            this.control_label_swagger = new System.Windows.Forms.Label();
+            this.control_textBox_swagger = new System.Windows.Forms.TextBox();
+            this.control_groupBox_infoServicio = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.control_textBox_infoServicio_version = new System.Windows.Forms.TextBox();
+            this.control_textBox_infoServicio_terminos = new System.Windows.Forms.TextBox();
+            this.control_label_infoServicio_terminos = new System.Windows.Forms.Label();
+            this.infoDescription = new System.Windows.Forms.TextBox();
+            this.control_label_infoServicio_descripcion = new System.Windows.Forms.Label();
+            this.control_textBox_infoServicio_titulo = new System.Windows.Forms.TextBox();
+            this.control_label_infoServicio_titulo = new System.Windows.Forms.Label();
+            this.control_label_infoServicio_version = new System.Windows.Forms.Label();
+            this.control_groupBox_contacto = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.control_label_contacto_url = new System.Windows.Forms.Label();
+            this.control_label_contacto_nombre = new System.Windows.Forms.Label();
+            this.control_label_contacto_correo = new System.Windows.Forms.Label();
+            this.control_textBox_contacto_nombre = new System.Windows.Forms.TextBox();
+            this.control_textBox_contacto_correo = new System.Windows.Forms.TextBox();
+            this.control_textBox_contacto_url = new System.Windows.Forms.TextBox();
+            this.control_groupBox_licencia = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+            this.control_textBox_licencia_url = new System.Windows.Forms.TextBox();
+            this.control_textBox_licencia_nombre = new System.Windows.Forms.TextBox();
+            this.control_label_licencia_nombre = new System.Windows.Forms.Label();
+            this.control_label_licencia_url = new System.Windows.Forms.Label();
+            this.control_tabPage_seguridad_y_tags = new System.Windows.Forms.TabPage();
+            this.label_title = new System.Windows.Forms.Label();
+            this.control_tabPage_recursos = new System.Windows.Forms.TabPage();
+            this.control_splitContainer = new System.Windows.Forms.SplitContainer();
+            this.control_treeView_recursos = new System.Windows.Forms.TreeView();
+            this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+            this.control_textBox_json = new System.Windows.Forms.TextBox();
+            this.form_tableLayoutPanel.SuspendLayout();
+            this.control_tabPrincipal.SuspendLayout();
+            this.control_tabPage_info.SuspendLayout();
+            this.tab_principal_tableLayoutPanel.SuspendLayout();
+            this.documentos_expernos_tableLayoutPanel.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.control_groupBox_esquemas.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.control_groupBox_infoServicio.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
+            this.control_groupBox_contacto.SuspendLayout();
+            this.tableLayoutPanel6.SuspendLayout();
+            this.control_groupBox_licencia.SuspendLayout();
+            this.tableLayoutPanel7.SuspendLayout();
+            this.control_tabPage_recursos.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.control_splitContainer)).BeginInit();
+            this.control_splitContainer.Panel1.SuspendLayout();
+            this.control_splitContainer.Panel2.SuspendLayout();
+            this.control_splitContainer.SuspendLayout();
+            this.tableLayoutPanel8.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // form_tableLayoutPanel
+            // 
+            this.form_tableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.form_tableLayoutPanel.ColumnCount = 1;
+            this.form_tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.form_tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.form_tableLayoutPanel.Controls.Add(this.control_tabPrincipal, 0, 1);
+            this.form_tableLayoutPanel.Controls.Add(this.label_title, 0, 0);
+            this.form_tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.form_tableLayoutPanel.Font = new System.Drawing.Font("Calibri", 8.1F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.form_tableLayoutPanel.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.form_tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.form_tableLayoutPanel.Name = "form_tableLayoutPanel";
+            this.form_tableLayoutPanel.RowCount = 2;
+            this.form_tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 64F));
+            this.form_tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.form_tableLayoutPanel.Size = new System.Drawing.Size(2318, 1146);
+            this.form_tableLayoutPanel.TabIndex = 0;
+            this.form_tableLayoutPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint_1);
+            // 
+            // control_tabPrincipal
+            // 
+            this.control_tabPrincipal.Controls.Add(this.control_tabPage_info);
+            this.control_tabPrincipal.Controls.Add(this.control_tabPage_seguridad_y_tags);
+            this.control_tabPrincipal.Controls.Add(this.control_tabPage_recursos);
+            this.control_tabPrincipal.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_tabPrincipal.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_tabPrincipal.Location = new System.Drawing.Point(3, 67);
+            this.control_tabPrincipal.Name = "control_tabPrincipal";
+            this.control_tabPrincipal.SelectedIndex = 0;
+            this.control_tabPrincipal.Size = new System.Drawing.Size(2312, 1076);
+            this.control_tabPrincipal.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.control_tabPrincipal.TabIndex = 0;
+            // 
+            // control_tabPage_info
+            // 
+            this.control_tabPage_info.Controls.Add(this.tab_principal_tableLayoutPanel);
+            this.control_tabPage_info.Location = new System.Drawing.Point(10, 57);
+            this.control_tabPage_info.Name = "control_tabPage_info";
+            this.control_tabPage_info.Padding = new System.Windows.Forms.Padding(3);
+            this.control_tabPage_info.Size = new System.Drawing.Size(2292, 1009);
+            this.control_tabPage_info.TabIndex = 0;
+            this.control_tabPage_info.Text = "Principal";
+            this.control_tabPage_info.UseVisualStyleBackColor = true;
+            // 
+            // tab_principal_tableLayoutPanel
+            // 
+            this.tab_principal_tableLayoutPanel.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.tab_principal_tableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tab_principal_tableLayoutPanel.ColumnCount = 3;
+            this.tab_principal_tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tab_principal_tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tab_principal_tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tab_principal_tableLayoutPanel.Controls.Add(this.documentos_expernos_tableLayoutPanel, 0, 1);
+            this.tab_principal_tableLayoutPanel.Controls.Add(this.tableLayoutPanel1, 0, 0);
+            this.tab_principal_tableLayoutPanel.Controls.Add(this.control_groupBox_infoServicio, 1, 0);
+            this.tab_principal_tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tab_principal_tableLayoutPanel.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.tab_principal_tableLayoutPanel.Location = new System.Drawing.Point(3, 3);
+            this.tab_principal_tableLayoutPanel.Name = "tab_principal_tableLayoutPanel";
+            this.tab_principal_tableLayoutPanel.RowCount = 2;
+            this.tab_principal_tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tab_principal_tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tab_principal_tableLayoutPanel.Size = new System.Drawing.Size(2286, 1003);
+            this.tab_principal_tableLayoutPanel.TabIndex = 0;
+            this.tab_principal_tableLayoutPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
+            // 
+            // documentos_expernos_tableLayoutPanel
+            // 
+            this.documentos_expernos_tableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.documentos_expernos_tableLayoutPanel.ColumnCount = 1;
+            this.tab_principal_tableLayoutPanel.SetColumnSpan(this.documentos_expernos_tableLayoutPanel, 3);
+            this.documentos_expernos_tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.documentos_expernos_tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.documentos_expernos_tableLayoutPanel.Controls.Add(this.control_listBox_documentos_externos, 0, 1);
+            this.documentos_expernos_tableLayoutPanel.Controls.Add(this.control_label_documentos_externos, 0, 0);
+            this.documentos_expernos_tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.documentos_expernos_tableLayoutPanel.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.documentos_expernos_tableLayoutPanel.Location = new System.Drawing.Point(3, 504);
+            this.documentos_expernos_tableLayoutPanel.Name = "documentos_expernos_tableLayoutPanel";
+            this.documentos_expernos_tableLayoutPanel.RowCount = 2;
+            this.documentos_expernos_tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 71F));
+            this.documentos_expernos_tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.documentos_expernos_tableLayoutPanel.Size = new System.Drawing.Size(2280, 496);
+            this.documentos_expernos_tableLayoutPanel.TabIndex = 1;
+            this.documentos_expernos_tableLayoutPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.documentos_expernos_tableLayoutPanel_Paint);
+            // 
+            // control_listBox_documentos_externos
+            // 
+            this.control_listBox_documentos_externos.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_listBox_documentos_externos.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_listBox_documentos_externos.FormattingEnabled = true;
+            this.control_listBox_documentos_externos.ItemHeight = 40;
+            this.control_listBox_documentos_externos.Location = new System.Drawing.Point(3, 74);
+            this.control_listBox_documentos_externos.MultiColumn = true;
+            this.control_listBox_documentos_externos.Name = "control_listBox_documentos_externos";
+            this.control_listBox_documentos_externos.Size = new System.Drawing.Size(2274, 419);
+            this.control_listBox_documentos_externos.TabIndex = 0;
+            this.control_listBox_documentos_externos.SelectedIndexChanged += new System.EventHandler(this.control_listBox_documentos_externos_SelectedIndexChanged);
+            // 
+            // control_label_documentos_externos
+            // 
+            this.control_label_documentos_externos.AutoSize = true;
+            this.control_label_documentos_externos.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.control_label_documentos_externos.Location = new System.Drawing.Point(3, 30);
+            this.control_label_documentos_externos.Name = "control_label_documentos_externos";
+            this.control_label_documentos_externos.Size = new System.Drawing.Size(2274, 41);
+            this.control_label_documentos_externos.TabIndex = 1;
+            this.control_label_documentos_externos.Text = "Documentos externos";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Controls.Add(this.control_groupBox_esquemas, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(756, 495);
+            this.tableLayoutPanel1.TabIndex = 2;
+            // 
+            // control_groupBox_esquemas
+            // 
+            this.control_groupBox_esquemas.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.control_groupBox_esquemas.Controls.Add(this.tableLayoutPanel2);
+            this.control_groupBox_esquemas.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_groupBox_esquemas.Location = new System.Drawing.Point(3, 250);
+            this.control_groupBox_esquemas.Name = "control_groupBox_esquemas";
+            this.control_groupBox_esquemas.Padding = new System.Windows.Forms.Padding(3, 13, 3, 3);
+            this.control_groupBox_esquemas.Size = new System.Drawing.Size(750, 242);
+            this.control_groupBox_esquemas.TabIndex = 0;
+            this.control_groupBox_esquemas.TabStop = false;
+            this.control_groupBox_esquemas.Text = "Esquemas";
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel2.ColumnCount = 4;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.Controls.Add(this.control_checkBox_wss, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.control_checkBox_ws, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.control_checkBox_https, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.control_checkBox_http, 0, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 54);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(744, 185);
+            this.tableLayoutPanel2.TabIndex = 0;
+            // 
+            // control_checkBox_wss
+            // 
+            this.control_checkBox_wss.AutoSize = true;
+            this.control_checkBox_wss.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_checkBox_wss.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_checkBox_wss.Location = new System.Drawing.Point(561, 3);
+            this.control_checkBox_wss.Name = "control_checkBox_wss";
+            this.control_checkBox_wss.Size = new System.Drawing.Size(180, 179);
+            this.control_checkBox_wss.TabIndex = 3;
+            this.control_checkBox_wss.Text = "wss";
+            this.control_checkBox_wss.UseVisualStyleBackColor = true;
+            // 
+            // control_checkBox_ws
+            // 
+            this.control_checkBox_ws.AutoSize = true;
+            this.control_checkBox_ws.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_checkBox_ws.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_checkBox_ws.Location = new System.Drawing.Point(375, 3);
+            this.control_checkBox_ws.Name = "control_checkBox_ws";
+            this.control_checkBox_ws.Size = new System.Drawing.Size(180, 179);
+            this.control_checkBox_ws.TabIndex = 2;
+            this.control_checkBox_ws.Text = "ws";
+            this.control_checkBox_ws.UseVisualStyleBackColor = true;
+            // 
+            // control_checkBox_https
+            // 
+            this.control_checkBox_https.AutoSize = true;
+            this.control_checkBox_https.Checked = true;
+            this.control_checkBox_https.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.control_checkBox_https.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_checkBox_https.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_checkBox_https.Location = new System.Drawing.Point(189, 3);
+            this.control_checkBox_https.Name = "control_checkBox_https";
+            this.control_checkBox_https.Size = new System.Drawing.Size(180, 179);
+            this.control_checkBox_https.TabIndex = 1;
+            this.control_checkBox_https.Text = "https";
+            this.control_checkBox_https.UseVisualStyleBackColor = true;
+            // 
+            // control_checkBox_http
+            // 
+            this.control_checkBox_http.AutoSize = true;
+            this.control_checkBox_http.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_checkBox_http.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_checkBox_http.Location = new System.Drawing.Point(3, 3);
+            this.control_checkBox_http.Name = "control_checkBox_http";
+            this.control_checkBox_http.Size = new System.Drawing.Size(180, 179);
+            this.control_checkBox_http.TabIndex = 0;
+            this.control_checkBox_http.Text = "http";
+            this.control_checkBox_http.UseVisualStyleBackColor = true;
+            this.control_checkBox_http.CheckedChanged += new System.EventHandler(this.control_checkBox_http_CheckedChanged);
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34.57944F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65.42056F));
+            this.tableLayoutPanel3.Controls.Add(this.control_textBox_basePath, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.control_label_basePath, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.textBox1, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.control_label_host, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.control_label_swagger, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.control_textBox_swagger, 1, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 4;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(750, 241);
+            this.tableLayoutPanel3.TabIndex = 1;
+            this.tableLayoutPanel3.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel3_Paint);
+            // 
+            // control_textBox_basePath
+            // 
+            this.control_textBox_basePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_basePath.Location = new System.Drawing.Point(262, 158);
+            this.control_textBox_basePath.Name = "control_textBox_basePath";
+            this.control_textBox_basePath.Size = new System.Drawing.Size(485, 48);
+            this.control_textBox_basePath.TabIndex = 5;
+            // 
+            // control_label_basePath
+            // 
+            this.control_label_basePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_basePath.AutoSize = true;
+            this.control_label_basePath.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_basePath.Location = new System.Drawing.Point(3, 162);
+            this.control_label_basePath.Name = "control_label_basePath";
+            this.control_label_basePath.Size = new System.Drawing.Size(253, 41);
+            this.control_label_basePath.TabIndex = 4;
+            this.control_label_basePath.Text = "Base path";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.Location = new System.Drawing.Point(262, 85);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(485, 48);
+            this.textBox1.TabIndex = 3;
+            // 
+            // control_label_host
+            // 
+            this.control_label_host.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_host.AutoSize = true;
+            this.control_label_host.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_host.Location = new System.Drawing.Point(3, 89);
+            this.control_label_host.Name = "control_label_host";
+            this.control_label_host.Size = new System.Drawing.Size(253, 41);
+            this.control_label_host.TabIndex = 2;
+            this.control_label_host.Text = "Host";
+            // 
+            // control_label_swagger
+            // 
+            this.control_label_swagger.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_swagger.AutoSize = true;
+            this.control_label_swagger.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_swagger.Location = new System.Drawing.Point(3, 16);
+            this.control_label_swagger.Name = "control_label_swagger";
+            this.control_label_swagger.Size = new System.Drawing.Size(253, 41);
+            this.control_label_swagger.TabIndex = 0;
+            this.control_label_swagger.Text = "Swagger";
+            // 
+            // control_textBox_swagger
+            // 
+            this.control_textBox_swagger.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_swagger.Location = new System.Drawing.Point(262, 12);
+            this.control_textBox_swagger.Name = "control_textBox_swagger";
+            this.control_textBox_swagger.Size = new System.Drawing.Size(485, 48);
+            this.control_textBox_swagger.TabIndex = 1;
+            this.control_textBox_swagger.Text = "2.0";
+            // 
+            // control_groupBox_infoServicio
+            // 
+            this.control_groupBox_infoServicio.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tab_principal_tableLayoutPanel.SetColumnSpan(this.control_groupBox_infoServicio, 2);
+            this.control_groupBox_infoServicio.Controls.Add(this.tableLayoutPanel4);
+            this.control_groupBox_infoServicio.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_groupBox_infoServicio.Location = new System.Drawing.Point(765, 3);
+            this.control_groupBox_infoServicio.Name = "control_groupBox_infoServicio";
+            this.control_groupBox_infoServicio.Size = new System.Drawing.Size(1518, 495);
+            this.control_groupBox_infoServicio.TabIndex = 3;
+            this.control_groupBox_infoServicio.TabStop = false;
+            this.control_groupBox_infoServicio.Text = "Info del servicio";
+            this.control_groupBox_infoServicio.Enter += new System.EventHandler(this.control_groupBox_infoServicio_Enter);
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 2;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.control_groupBox_contacto, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.control_groupBox_licencia, 1, 1);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 44);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(1512, 448);
+            this.tableLayoutPanel4.TabIndex = 0;
+            this.tableLayoutPanel4.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel4_Paint);
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 2;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Controls.Add(this.control_textBox_infoServicio_version, 1, 4);
+            this.tableLayoutPanel5.Controls.Add(this.control_textBox_infoServicio_terminos, 1, 3);
+            this.tableLayoutPanel5.Controls.Add(this.control_label_infoServicio_terminos, 0, 3);
+            this.tableLayoutPanel5.Controls.Add(this.infoDescription, 0, 2);
+            this.tableLayoutPanel5.Controls.Add(this.control_label_infoServicio_descripcion, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.control_textBox_infoServicio_titulo, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.control_label_infoServicio_titulo, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.control_label_infoServicio_version, 0, 4);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 5;
+            this.tableLayoutPanel4.SetRowSpan(this.tableLayoutPanel5, 2);
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(750, 442);
+            this.tableLayoutPanel5.TabIndex = 0;
+            // 
+            // control_textBox_infoServicio_version
+            // 
+            this.control_textBox_infoServicio_version.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_infoServicio_version.Location = new System.Drawing.Point(378, 373);
+            this.control_textBox_infoServicio_version.Name = "control_textBox_infoServicio_version";
+            this.control_textBox_infoServicio_version.Size = new System.Drawing.Size(369, 48);
+            this.control_textBox_infoServicio_version.TabIndex = 12;
+            this.control_textBox_infoServicio_version.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
+            // 
+            // control_textBox_infoServicio_terminos
+            // 
+            this.control_textBox_infoServicio_terminos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_infoServicio_terminos.Location = new System.Drawing.Point(378, 284);
+            this.control_textBox_infoServicio_terminos.Name = "control_textBox_infoServicio_terminos";
+            this.control_textBox_infoServicio_terminos.Size = new System.Drawing.Size(369, 48);
+            this.control_textBox_infoServicio_terminos.TabIndex = 11;
+            // 
+            // control_label_infoServicio_terminos
+            // 
+            this.control_label_infoServicio_terminos.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_infoServicio_terminos.AutoSize = true;
+            this.control_label_infoServicio_terminos.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_infoServicio_terminos.Location = new System.Drawing.Point(3, 287);
+            this.control_label_infoServicio_terminos.Name = "control_label_infoServicio_terminos";
+            this.control_label_infoServicio_terminos.Size = new System.Drawing.Size(369, 41);
+            this.control_label_infoServicio_terminos.TabIndex = 9;
+            this.control_label_infoServicio_terminos.Text = "Términos";
+            // 
+            // infoDescription
+            // 
+            this.tableLayoutPanel5.SetColumnSpan(this.infoDescription, 2);
+            this.infoDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.infoDescription.Location = new System.Drawing.Point(3, 179);
+            this.infoDescription.Multiline = true;
+            this.infoDescription.Name = "infoDescription";
+            this.infoDescription.Size = new System.Drawing.Size(744, 82);
+            this.infoDescription.TabIndex = 8;
+            // 
+            // control_label_infoServicio_descripcion
+            // 
+            this.control_label_infoServicio_descripcion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_infoServicio_descripcion.AutoSize = true;
+            this.tableLayoutPanel5.SetColumnSpan(this.control_label_infoServicio_descripcion, 2);
+            this.control_label_infoServicio_descripcion.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_infoServicio_descripcion.ImageAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.control_label_infoServicio_descripcion.Location = new System.Drawing.Point(3, 111);
+            this.control_label_infoServicio_descripcion.Name = "control_label_infoServicio_descripcion";
+            this.control_label_infoServicio_descripcion.Size = new System.Drawing.Size(744, 41);
+            this.control_label_infoServicio_descripcion.TabIndex = 7;
+            this.control_label_infoServicio_descripcion.Text = "Descrición";
+            // 
+            // control_textBox_infoServicio_titulo
+            // 
+            this.control_textBox_infoServicio_titulo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_infoServicio_titulo.Location = new System.Drawing.Point(378, 20);
+            this.control_textBox_infoServicio_titulo.Name = "control_textBox_infoServicio_titulo";
+            this.control_textBox_infoServicio_titulo.Size = new System.Drawing.Size(369, 48);
+            this.control_textBox_infoServicio_titulo.TabIndex = 6;
+            // 
+            // control_label_infoServicio_titulo
+            // 
+            this.control_label_infoServicio_titulo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_infoServicio_titulo.AutoSize = true;
+            this.control_label_infoServicio_titulo.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_infoServicio_titulo.Location = new System.Drawing.Point(3, 23);
+            this.control_label_infoServicio_titulo.Name = "control_label_infoServicio_titulo";
+            this.control_label_infoServicio_titulo.Size = new System.Drawing.Size(369, 41);
+            this.control_label_infoServicio_titulo.TabIndex = 6;
+            this.control_label_infoServicio_titulo.Text = "Título";
+            // 
+            // control_label_infoServicio_version
+            // 
+            this.control_label_infoServicio_version.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_infoServicio_version.AutoSize = true;
+            this.control_label_infoServicio_version.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_infoServicio_version.Location = new System.Drawing.Point(3, 376);
+            this.control_label_infoServicio_version.Name = "control_label_infoServicio_version";
+            this.control_label_infoServicio_version.Size = new System.Drawing.Size(369, 41);
+            this.control_label_infoServicio_version.TabIndex = 10;
+            this.control_label_infoServicio_version.Text = "Versión";
+            // 
+            // control_groupBox_contacto
+            // 
+            this.control_groupBox_contacto.Controls.Add(this.tableLayoutPanel6);
+            this.control_groupBox_contacto.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_groupBox_contacto.Location = new System.Drawing.Point(759, 3);
+            this.control_groupBox_contacto.Name = "control_groupBox_contacto";
+            this.control_groupBox_contacto.Size = new System.Drawing.Size(750, 218);
+            this.control_groupBox_contacto.TabIndex = 1;
+            this.control_groupBox_contacto.TabStop = false;
+            this.control_groupBox_contacto.Text = "Control";
+            // 
+            // tableLayoutPanel6
+            // 
+            this.tableLayoutPanel6.ColumnCount = 2;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel6.Controls.Add(this.control_label_contacto_url, 0, 2);
+            this.tableLayoutPanel6.Controls.Add(this.control_label_contacto_nombre, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.control_label_contacto_correo, 0, 1);
+            this.tableLayoutPanel6.Controls.Add(this.control_textBox_contacto_nombre, 1, 0);
+            this.tableLayoutPanel6.Controls.Add(this.control_textBox_contacto_correo, 1, 1);
+            this.tableLayoutPanel6.Controls.Add(this.control_textBox_contacto_url, 1, 2);
+            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 44);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.RowCount = 4;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(744, 171);
+            this.tableLayoutPanel6.TabIndex = 0;
+            // 
+            // control_label_contacto_url
+            // 
+            this.control_label_contacto_url.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_contacto_url.AutoSize = true;
+            this.control_label_contacto_url.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_contacto_url.Location = new System.Drawing.Point(3, 104);
+            this.control_label_contacto_url.Name = "control_label_contacto_url";
+            this.control_label_contacto_url.Size = new System.Drawing.Size(366, 41);
+            this.control_label_contacto_url.TabIndex = 9;
+            this.control_label_contacto_url.Text = "URL";
+            this.control_label_contacto_url.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // control_label_contacto_nombre
+            // 
+            this.control_label_contacto_nombre.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_contacto_nombre.AutoSize = true;
+            this.control_label_contacto_nombre.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_contacto_nombre.Location = new System.Drawing.Point(3, 4);
+            this.control_label_contacto_nombre.Name = "control_label_contacto_nombre";
+            this.control_label_contacto_nombre.Size = new System.Drawing.Size(366, 41);
+            this.control_label_contacto_nombre.TabIndex = 7;
+            this.control_label_contacto_nombre.Text = "Nombre";
+            // 
+            // control_label_contacto_correo
+            // 
+            this.control_label_contacto_correo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_contacto_correo.AutoSize = true;
+            this.control_label_contacto_correo.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_contacto_correo.Location = new System.Drawing.Point(3, 54);
+            this.control_label_contacto_correo.Name = "control_label_contacto_correo";
+            this.control_label_contacto_correo.Size = new System.Drawing.Size(366, 41);
+            this.control_label_contacto_correo.TabIndex = 8;
+            this.control_label_contacto_correo.Text = "Correo";
+            // 
+            // control_textBox_contacto_nombre
+            // 
+            this.control_textBox_contacto_nombre.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_contacto_nombre.Location = new System.Drawing.Point(375, 3);
+            this.control_textBox_contacto_nombre.Name = "control_textBox_contacto_nombre";
+            this.control_textBox_contacto_nombre.Size = new System.Drawing.Size(366, 48);
+            this.control_textBox_contacto_nombre.TabIndex = 10;
+            // 
+            // control_textBox_contacto_correo
+            // 
+            this.control_textBox_contacto_correo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_contacto_correo.Location = new System.Drawing.Point(375, 53);
+            this.control_textBox_contacto_correo.Name = "control_textBox_contacto_correo";
+            this.control_textBox_contacto_correo.Size = new System.Drawing.Size(366, 48);
+            this.control_textBox_contacto_correo.TabIndex = 11;
+            // 
+            // control_textBox_contacto_url
+            // 
+            this.control_textBox_contacto_url.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_contacto_url.Location = new System.Drawing.Point(375, 103);
+            this.control_textBox_contacto_url.Name = "control_textBox_contacto_url";
+            this.control_textBox_contacto_url.Size = new System.Drawing.Size(366, 48);
+            this.control_textBox_contacto_url.TabIndex = 12;
+            // 
+            // control_groupBox_licencia
+            // 
+            this.control_groupBox_licencia.Controls.Add(this.tableLayoutPanel7);
+            this.control_groupBox_licencia.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_groupBox_licencia.Location = new System.Drawing.Point(759, 227);
+            this.control_groupBox_licencia.Name = "control_groupBox_licencia";
+            this.control_groupBox_licencia.Size = new System.Drawing.Size(750, 218);
+            this.control_groupBox_licencia.TabIndex = 2;
+            this.control_groupBox_licencia.TabStop = false;
+            this.control_groupBox_licencia.Text = "Licencia";
+            // 
+            // tableLayoutPanel7
+            // 
+            this.tableLayoutPanel7.ColumnCount = 2;
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.Controls.Add(this.control_textBox_licencia_url, 1, 1);
+            this.tableLayoutPanel7.Controls.Add(this.control_textBox_licencia_nombre, 1, 0);
+            this.tableLayoutPanel7.Controls.Add(this.control_label_licencia_nombre, 0, 0);
+            this.tableLayoutPanel7.Controls.Add(this.control_label_licencia_url, 0, 1);
+            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 44);
+            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+            this.tableLayoutPanel7.RowCount = 2;
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(744, 171);
+            this.tableLayoutPanel7.TabIndex = 0;
+            // 
+            // control_textBox_licencia_url
+            // 
+            this.control_textBox_licencia_url.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_licencia_url.Location = new System.Drawing.Point(375, 104);
+            this.control_textBox_licencia_url.Name = "control_textBox_licencia_url";
+            this.control_textBox_licencia_url.Size = new System.Drawing.Size(366, 48);
+            this.control_textBox_licencia_url.TabIndex = 15;
+            // 
+            // control_textBox_licencia_nombre
+            // 
+            this.control_textBox_licencia_nombre.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_textBox_licencia_nombre.Location = new System.Drawing.Point(375, 18);
+            this.control_textBox_licencia_nombre.Name = "control_textBox_licencia_nombre";
+            this.control_textBox_licencia_nombre.Size = new System.Drawing.Size(366, 48);
+            this.control_textBox_licencia_nombre.TabIndex = 13;
+            // 
+            // control_label_licencia_nombre
+            // 
+            this.control_label_licencia_nombre.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_licencia_nombre.AutoSize = true;
+            this.control_label_licencia_nombre.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_licencia_nombre.Location = new System.Drawing.Point(3, 22);
+            this.control_label_licencia_nombre.Name = "control_label_licencia_nombre";
+            this.control_label_licencia_nombre.Size = new System.Drawing.Size(366, 41);
+            this.control_label_licencia_nombre.TabIndex = 13;
+            this.control_label_licencia_nombre.Text = "Nombre";
+            // 
+            // control_label_licencia_url
+            // 
+            this.control_label_licencia_url.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.control_label_licencia_url.AutoSize = true;
+            this.control_label_licencia_url.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_label_licencia_url.Location = new System.Drawing.Point(3, 107);
+            this.control_label_licencia_url.Name = "control_label_licencia_url";
+            this.control_label_licencia_url.Size = new System.Drawing.Size(366, 41);
+            this.control_label_licencia_url.TabIndex = 14;
+            this.control_label_licencia_url.Text = "URL";
+            // 
+            // control_tabPage_seguridad_y_tags
+            // 
+            this.control_tabPage_seguridad_y_tags.Location = new System.Drawing.Point(10, 57);
+            this.control_tabPage_seguridad_y_tags.Name = "control_tabPage_seguridad_y_tags";
+            this.control_tabPage_seguridad_y_tags.Padding = new System.Windows.Forms.Padding(3);
+            this.control_tabPage_seguridad_y_tags.Size = new System.Drawing.Size(2292, 1009);
+            this.control_tabPage_seguridad_y_tags.TabIndex = 1;
+            this.control_tabPage_seguridad_y_tags.Text = "Seguridad y tags";
+            this.control_tabPage_seguridad_y_tags.UseVisualStyleBackColor = true;
+            // 
+            // label_title
+            // 
+            this.label_title.AutoSize = true;
+            this.label_title.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_title.Location = new System.Drawing.Point(3, 0);
+            this.label_title.Name = "label_title";
+            this.label_title.Size = new System.Drawing.Size(288, 46);
+            this.label_title.TabIndex = 1;
+            this.label_title.Text = "Swagger editor";
+            // 
+            // control_tabPage_recursos
+            // 
+            this.control_tabPage_recursos.Controls.Add(this.control_splitContainer);
+            this.control_tabPage_recursos.Location = new System.Drawing.Point(10, 57);
+            this.control_tabPage_recursos.Name = "control_tabPage_recursos";
+            this.control_tabPage_recursos.Padding = new System.Windows.Forms.Padding(3);
+            this.control_tabPage_recursos.Size = new System.Drawing.Size(2292, 1009);
+            this.control_tabPage_recursos.TabIndex = 2;
+            this.control_tabPage_recursos.Text = "Recursos";
+            this.control_tabPage_recursos.UseVisualStyleBackColor = true;
+            // 
+            // control_splitContainer
+            // 
+            this.control_splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_splitContainer.Location = new System.Drawing.Point(3, 3);
+            this.control_splitContainer.Name = "control_splitContainer";
+            // 
+            // control_splitContainer.Panel1
+            // 
+            this.control_splitContainer.Panel1.Controls.Add(this.control_treeView_recursos);
+            // 
+            // control_splitContainer.Panel2
+            // 
+            this.control_splitContainer.Panel2.Controls.Add(this.tableLayoutPanel8);
+            this.control_splitContainer.Size = new System.Drawing.Size(2286, 1003);
+            this.control_splitContainer.SplitterDistance = 762;
+            this.control_splitContainer.TabIndex = 0;
+            // 
+            // control_treeView_recursos
+            // 
+            this.control_treeView_recursos.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_treeView_recursos.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_treeView_recursos.LabelEdit = true;
+            this.control_treeView_recursos.LineColor = System.Drawing.Color.Olive;
+            this.control_treeView_recursos.Location = new System.Drawing.Point(0, 0);
+            this.control_treeView_recursos.Name = "control_treeView_recursos";
+            this.control_treeView_recursos.Size = new System.Drawing.Size(762, 1003);
+            this.control_treeView_recursos.TabIndex = 0;
+            // 
+            // tableLayoutPanel8
+            // 
+            this.tableLayoutPanel8.ColumnCount = 1;
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel8.Controls.Add(this.control_textBox_json, 0, 1);
+            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel9, 0, 0);
+            this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel8.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel8.Name = "tableLayoutPanel8";
+            this.tableLayoutPanel8.RowCount = 2;
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090909F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90.90909F));
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(1520, 1003);
+            this.tableLayoutPanel8.TabIndex = 0;
+            // 
+            // tableLayoutPanel9
+            // 
+            this.tableLayoutPanel9.ColumnCount = 2;
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+            this.tableLayoutPanel9.RowCount = 2;
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(1514, 85);
+            this.tableLayoutPanel9.TabIndex = 0;
+            // 
+            // control_textBox_json
+            // 
+            this.control_textBox_json.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.control_textBox_json.Font = new System.Drawing.Font("Calibri", 9.900001F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.control_textBox_json.Location = new System.Drawing.Point(3, 94);
+            this.control_textBox_json.Multiline = true;
+            this.control_textBox_json.Name = "control_textBox_json";
+            this.control_textBox_json.Size = new System.Drawing.Size(1514, 906);
+            this.control_textBox_json.TabIndex = 0;
+            // 
+            // SwaggerEditor
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
+            this.AutoSize = true;
+            this.Controls.Add(this.form_tableLayoutPanel);
+            this.Name = "SwaggerEditor";
+            this.Size = new System.Drawing.Size(2318, 1146);
+            this.Load += new System.EventHandler(this.SwaggerEditor_Load);
+            this.form_tableLayoutPanel.ResumeLayout(false);
+            this.form_tableLayoutPanel.PerformLayout();
+            this.control_tabPrincipal.ResumeLayout(false);
+            this.control_tabPage_info.ResumeLayout(false);
+            this.tab_principal_tableLayoutPanel.ResumeLayout(false);
+            this.documentos_expernos_tableLayoutPanel.ResumeLayout(false);
+            this.documentos_expernos_tableLayoutPanel.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.control_groupBox_esquemas.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            this.control_groupBox_infoServicio.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
+            this.control_groupBox_contacto.ResumeLayout(false);
+            this.tableLayoutPanel6.ResumeLayout(false);
+            this.tableLayoutPanel6.PerformLayout();
+            this.control_groupBox_licencia.ResumeLayout(false);
+            this.tableLayoutPanel7.ResumeLayout(false);
+            this.tableLayoutPanel7.PerformLayout();
+            this.control_tabPage_recursos.ResumeLayout(false);
+            this.control_splitContainer.Panel1.ResumeLayout(false);
+            this.control_splitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.control_splitContainer)).EndInit();
+            this.control_splitContainer.ResumeLayout(false);
+            this.tableLayoutPanel8.ResumeLayout(false);
+            this.tableLayoutPanel8.PerformLayout();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.TableLayoutPanel form_tableLayoutPanel;
+        private System.Windows.Forms.TabControl control_tabPrincipal;
+        private System.Windows.Forms.TabPage control_tabPage_info;
+        private System.Windows.Forms.TableLayoutPanel tab_principal_tableLayoutPanel;
+        private System.Windows.Forms.TabPage control_tabPage_seguridad_y_tags;
+        private System.Windows.Forms.Label label_title;
+        private System.Windows.Forms.TableLayoutPanel documentos_expernos_tableLayoutPanel;
+        private System.Windows.Forms.ListBox control_listBox_documentos_externos;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.GroupBox control_groupBox_esquemas;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.CheckBox control_checkBox_http;
+        private System.Windows.Forms.CheckBox control_checkBox_https;
+        private System.Windows.Forms.CheckBox control_checkBox_ws;
+        private System.Windows.Forms.CheckBox control_checkBox_wss;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Label control_label_swagger;
+        private System.Windows.Forms.TextBox control_textBox_swagger;
+        private System.Windows.Forms.Label control_label_host;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox control_textBox_basePath;
+        private System.Windows.Forms.Label control_label_basePath;
+        private System.Windows.Forms.GroupBox control_groupBox_infoServicio;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.Label control_label_infoServicio_titulo;
+        private System.Windows.Forms.Label control_label_infoServicio_descripcion;
+        private System.Windows.Forms.TextBox control_textBox_infoServicio_titulo;
+        private System.Windows.Forms.TextBox infoDescription;
+        private System.Windows.Forms.Label control_label_infoServicio_terminos;
+        private System.Windows.Forms.TextBox control_textBox_infoServicio_version;
+        private System.Windows.Forms.TextBox control_textBox_infoServicio_terminos;
+        private System.Windows.Forms.Label control_label_infoServicio_version;
+        private System.Windows.Forms.GroupBox control_groupBox_contacto;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+        private System.Windows.Forms.Label control_label_contacto_nombre;
+        private System.Windows.Forms.Label control_label_contacto_correo;
+        private System.Windows.Forms.Label control_label_contacto_url;
+        private System.Windows.Forms.TextBox control_textBox_contacto_nombre;
+        private System.Windows.Forms.TextBox control_textBox_contacto_correo;
+        private System.Windows.Forms.TextBox control_textBox_contacto_url;
+        private System.Windows.Forms.GroupBox control_groupBox_licencia;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+        private System.Windows.Forms.Label control_label_licencia_nombre;
+        private System.Windows.Forms.TextBox control_textBox_licencia_url;
+        private System.Windows.Forms.TextBox control_textBox_licencia_nombre;
+        private System.Windows.Forms.Label control_label_licencia_url;
+        private System.Windows.Forms.Label control_label_documentos_externos;
+        private System.Windows.Forms.TabPage control_tabPage_recursos;
+        private System.Windows.Forms.SplitContainer control_splitContainer;
+        private System.Windows.Forms.TreeView control_treeView_recursos;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
+        private System.Windows.Forms.TextBox control_textBox_json;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
+    }
+}

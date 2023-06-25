@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="actualizado" xml:space="preserve">
+    <value>updated</value>
+  </data>
+  <data name="copiado_portapapeles" xml:space="preserve">
+    <value>It has been copied in the paper holder</value>
+  </data>
+  <data name="creado" xml:space="preserve">
+    <value>created</value>
+  </data>
+  <data name="elegir_lenguaje_window_button_cancel_label" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="elegir_lenguaje_window_title" xml:space="preserve">
+    <value>Choose the language</value>
+  </data>
+  <data name="enumeracion_ok" xml:space="preserve">
+    <value>Enum has been {0}</value>
+  </data>
+  <data name="error_aggregation" xml:space="preserve">
+    <value>The strategy (aggregation) of conclusion has not been established</value>
+  </data>
+  <data name="error_completeness" xml:space="preserve">
+    <value>The completeness of the table has not been determined</value>
+  </data>
+  <data name="error_conclusiones_incompletas" xml:space="preserve">
+    <value>The conclusions are not complete</value>
+  </data>
+  <data name="error_condiciones_incompletas" xml:space="preserve">
+    <value>The conditions are not complete</value>
+  </data>
+  <data name="error_hitPolicy" xml:space="preserve">
+    <value>The strategy (hit policy) of decision has not been established</value>
+  </data>
+  <data name="error_indeterminado" xml:space="preserve">
+    <value>An error occurred, please check the system exit</value>
+  </data>
+  <data name="error_no_pertence_a_dataContainer" xml:space="preserve">
+    <value>Element {0} must belong to a DataContainer</value>
+  </data>
+  <data name="error_reglas_incompletas" xml:space="preserve">
+    <value>The rules are not complete</value>
+  </data>
+  <data name="error_tablaDecision_obtener" xml:space="preserve">
+    <value>The item decision table could not be obtained</value>
+  </data>
+  <data name="error_tablaDecision_requerida" xml:space="preserve">
+    <value>A table defined for the element is required</value>
+  </data>
+  <data name="error_tipo__dato_no_definido" xml:space="preserve">
+    <value>Element {0} does not have a data type defined</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="icons8_Add_Property_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Add Property-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Add_Property_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Add Property-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Copy_to_Clipboard_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Copy to Clipboard-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_JSON_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-JSON-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_JSON_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-JSON-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Play_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Play-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Plus_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Plus-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Plus_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Plus-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Refresh_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Refresh-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Save_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Save-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Save_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Save-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Sort_Down_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Sort Down-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Source_Code_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Source Code-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Source_Code_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Source Code-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Trash_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Trash-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_Trash_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-Trash-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_XML_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-XML-32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icons8_XML_64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icons8-XML-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="instanciado" xml:space="preserve">
+    <value>It has been instantiated {0}</value>
+  </data>
+  <data name="instanciado_desde" xml:space="preserve">
+    <value>It has been instantiated {0} from {1}</value>
+  </data>
+  <data name="ITEM_MENU__AGREGAR_VARIABLE" xml:space="preserve">
+    <value>Add variable</value>
+  </data>
+  <data name="ITEM_MENU__CREAR_ENUMERACION" xml:space="preserve">
+    <value>Create enumerations from variable</value>
+  </data>
+  <data name="ITEM_MENU__EDITOR_VARIABLE" xml:space="preserve">
+    <value>Open variable editor</value>
+  </data>
+  <data name="ITEM_MENU__ENUM2CSV_MENU" xml:space="preserve">
+    <value>Enumeration to the clipboard as CSV</value>
+  </data>
+  <data name="ITEM_MENU__ENUM2CSV__ALIAS" xml:space="preserve">
+    <value>Use the alias</value>
+  </data>
+  <data name="ITEM_MENU__ENUM2CSV__NAME" xml:space="preserve">
+    <value>Use the name</value>
+  </data>
+  <data name="ITEM_MENU__GENERAR_CODIGO" xml:space="preserve">
+    <value>Generate source code</value>
+  </data>
+  <data name="ITEM_MENU__GENERAR_DMN_XML" xml:space="preserve">
+    <value>Generate .dmn</value>
+  </data>
+  <data name="ITEM_MENU__GENERAR_MENU" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="no_implementada" xml:space="preserve">
+    <value>Option not implemented</value>
+  </data>
+  <data name="no_implementada_desde_menu" xml:space="preserve">
+    <value>Not implemented from the menu yet</value>
+  </data>
+  <data name="seleccionar" xml:space="preserve">
+    <value>Select ...</value>
+  </data>
+  <data name="variable_creada" xml:space="preserve">
+    <value>An anonymous variable has been created</value>
+  </data>
+  <data name="variable_editor_label_attributeName" xml:space="preserve">
+    <value>Attribute name</value>
+  </data>
+  <data name="variable_editor_label_businessName" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="variable_editor_label_default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="variable_editor_label_format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="variable_editor_label_type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="variable_editor_tooltip_agregar" xml:space="preserve">
+    <value>Add var</value>
+  </data>
+  <data name="variable_editor_tooltip_crear_enumeracion" xml:space="preserve">
+    <value>Create enumeration</value>
+  </data>
+  <data name="variable_editor_tooltip_eliminar" xml:space="preserve">
+    <value>Delete variable</value>
+  </data>
+  <data name="variable_editor_tooltip_generar_codigo" xml:space="preserve">
+    <value>Generate source code</value>
+  </data>
+  <data name="variable_editor_tooltip_generar_dmn" xml:space="preserve">
+    <value>Generate .dmn</value>
+  </data>
+  <data name="variable_editor_tooltip_generar_json" xml:space="preserve">
+    <value>Generate JSON</value>
+  </data>
+  <data name="variable_editor_tooltip_guardar" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="variable_noUsada" xml:space="preserve">
+    <value>The variable is not in use or, if you have modified some data you must open the table so that it is refreshed</value>
+  </data>
+  <data name="business_knowledge_sufijo" xml:space="preserve">
+    <value>table</value>
+  </data>
+</root>

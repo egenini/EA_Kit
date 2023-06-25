@@ -1,0 +1,37 @@
+﻿using System;
+
+namespace EAUtils
+{
+    public class Usuario
+    {
+        public string apellido;
+        public string departamento;
+        public string id;
+        public string login;
+        public string nombre;
+
+        public Usuario()
+        {
+        }
+
+        public string autor()
+        {
+            return nombre + " " + apellido;
+        }
+
+        public string presentacion()
+        {
+            return apellido + ", " + nombre;
+        }
+
+        public bool esElMismo( string userItem )
+        {
+            return this.presentacion() == userItem;
+        }
+
+        public string presentacionDesdeAutor(string autorConsultado)
+        {
+            return this.autor() == autorConsultado ? this.presentacion() : null;
+        }
+    }
+}

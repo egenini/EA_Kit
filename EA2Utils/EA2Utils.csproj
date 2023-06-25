@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AC4D25E0-8A9C-4876-9CD8-53CE89718962}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EAUtils</RootNamespace>
+    <AssemblyName>EA2Utils</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EPPlus, Version=6.1.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.6.1.1\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=6.1.1.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.6.1.1\lib\net35\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing, Version=6.1.1.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.System.Drawing.6.1.1\lib\net35\EPPlus.System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="FastMember, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.2.0\lib\net45\FastMember.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.EA, Version=2.10.238.1, Culture=neutral, PublicKeyToken=d28e1c76302f6a17, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\Program Files (x86)\Sparx Systems\EA\Interop.EA.dll</HintPath>
+    </Reference>
+    <Reference Include="Jint, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jint.2.11.55\lib\net451\Jint.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddinInfo.cs" />
+    <Compile Include="AttributeUtils.cs" />
+    <Compile Include="Base64.cs" />
+    <Compile Include="CheckListUtil.cs" />
+    <Compile Include="DirectorioArchivoUsuarioHelper.cs" />
+    <Compile Include="Elaptime.cs" />
+    <Compile Include="entity\AttributeBase.cs" />
+    <Compile Include="entity\Entity.cs" />
+    <Compile Include="flow\ElegirSiguiente.cs" />
+    <Compile Include="flow\ElegirSiguienteEvaluaGuarda.cs" />
+    <Compile Include="flow\GestorTraza.cs" />
+    <Compile Include="flow\RecorreFlow.cs" />
+    <Compile Include="flow\Traza.cs" />
+    <Compile Include="flow\ui\ElegirSiguienteUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="flow\ui\ElegirSiguienteUI.Designer.cs">
+      <DependentUpon>ElegirSiguienteUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="framework2\domain\Artifact.cs" />
+    <Compile Include="framework2\domain\DataType.cs" />
+    <Compile Include="framework2\domain\Dialect.cs" />
+    <Compile Include="framework2\domain\Language.cs" />
+    <Compile Include="framework2\FrameworkCommons2.cs" />
+    <Compile Include="framework2\JsonableCommon.cs" />
+    <Compile Include="framework2\Jsonable.cs" />
+    <Compile Include="framework2\JsLoader.cs" />
+    <Compile Include="framework2\json\DialectInfo.cs" />
+    <Compile Include="framework2\json\FilePreference.cs" />
+    <Compile Include="framework2\json\TemplateReplaceInfo.cs" />
+    <Compile Include="framework2\OnPreDropFromTree.cs" />
+    <Compile Include="framework\domain\DataType.cs" />
+    <Compile Include="framework\domain\Language.cs" />
+    <Compile Include="framework\FrameworkCommons.cs" />
+    <Compile Include="entity\FullAttribute.cs" />
+    <Compile Include="ICardinality.cs" />
+    <Compile Include="ConnectorUtils.cs" />
+    <Compile Include="DataTypeUtils.cs" />
+    <Compile Include="DbUtils.cs" />
+    <Compile Include="DiagramObjectExt.cs" />
+    <Compile Include="DiagramObjectPosition.cs" />
+    <Compile Include="DiagramUtils.cs" />
+    <Compile Include="EAUtils.cs" />
+    <Compile Include="ElementUtils.cs" />
+    <Compile Include="InstanceUtil.cs" />
+    <Compile Include="Json2EAClass.cs" />
+    <Compile Include="JsonBuilder.cs" />
+    <Compile Include="JsonParser.cs" />
+    <Compile Include="JsonUtils.cs" />
+    <Compile Include="LanguajeExtension.cs" />
+    <Compile Include="ModelClass2RealClass.cs" />
+    <Compile Include="model\Attribute.cs" />
+    <Compile Include="model\Class.cs" />
+    <Compile Include="model\Column.cs" />
+    <Compile Include="model\Multiplicity.cs" />
+    <Compile Include="PackageUtils.cs" />
+    <Compile Include="PropertiesTabUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.en.Designer.cs">
+      <DependentUpon>Resources.en.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RealClass.cs" />
+    <Compile Include="ReportUtils.cs" />
+    <Compile Include="RepositoryConfig.cs" />
+    <Compile Include="saveUtils\ChooseTarget2Save.cs" />
+    <Compile Include="saveUtils\SaveDialogResolverUtil.cs" />
+    <Compile Include="saveUtils\SaveFileInfo.cs" />
+    <Compile Include="SemanticVersioning.cs" />
+    <Compile Include="SQLUtils.cs" />
+    <Compile Include="StringUtils.cs" />
+    <Compile Include="TaggedValuesUtils.cs" />
+    <Compile Include="TreeList.cs" />
+    <Compile Include="ui\ChooseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\ChooseForm.Designer.cs">
+      <DependentUpon>ChooseForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\ChooseUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\ChooseUC.Designer.cs">
+      <DependentUpon>ChooseUC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="User.cs" />
+    <Compile Include="XmlUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="flow\ui\ElegirSiguienteUI.resx">
+      <DependentUpon>ElegirSiguienteUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\ChooseForm.resx">
+      <DependentUpon>ChooseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\ChooseUC.resx">
+      <DependentUpon>ChooseUC.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LicenceManager\LicenceManager.csproj">
+      <Project>{daca3e8b-810f-442e-8d8d-02b090e15d5f}</Project>
+      <Name>LicenceManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UIResources\UIResources.csproj">
+      <Project>{06777893-2d2f-442c-90fa-0b4728bccb21}</Project>
+      <Name>UIResources</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

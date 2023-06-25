@@ -1,0 +1,88 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace RestFul
+{
+    public partial class SwaggerEditor : UserControl
+    {
+        public static string NAME = "Swagger Editor";
+
+        public SwaggerEditor()
+        {
+            InitializeComponent();
+        }
+
+        public void show()
+        {
+            FormSwagger formSwagger = new FormSwagger();
+
+            formSwagger.Show();
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void SwaggerEditor_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel1_Paint_1(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void control_checkBox_http_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel4_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void documentos_expernos_tableLayoutPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void control_groupBox_infoServicio_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void control_listBox_documentos_externos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

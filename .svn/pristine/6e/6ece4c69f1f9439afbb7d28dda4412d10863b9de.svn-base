@@ -1,0 +1,498 @@
+﻿using EA;
+using Newtonsoft.Json;
+using Productividad.modelo;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace Productividad.builder
+{
+    class SwaggerBuilder
+    {
+        private Swagger swagger;
+        private EAUtils.EAUtils eaUtils;
+        private JsonUtils jsonUtils;
+        JsonWriter writer;
+        private Element swaggerElement;
+
+        public SwaggerBuilder(Swagger swagger, EAUtils.EAUtils eaUtils, JsonUtils jsonUtils)
+        {
+            this.swagger = swagger;
+            this.eaUtils = eaUtils;
+            this.jsonUtils = jsonUtils;
+        }
+
+        public string build(EA.Element swaggerClass)
+        {
+            this.swaggerElement = swaggerClass;
+
+            StringBuilder sb = new StringBuilder();
+            StringWriter sw = new StringWriter(sb);
+            writer = new JsonTextWriter(sw);
+
+            writer.Formatting = Newtonsoft.Json.Formatting.Indented;
+
+            writer.WriteStartObject();
+
+            this.fromObject(writer);
+
+            writer.WriteEnd();
+
+            swaggerClass.Notes = sw.ToString();
+
+            System.Windows.Forms.MessageBox.Show("Se ha generado el swagger json");
+
+            eaUtils.printOut(swaggerClass.Notes);
+
+            return swaggerClass.Notes;
+        }
+
+        private void fromObject(JsonWriter writer)
+        {
+            writer.WritePropertyName("swagger");
+            writer.WriteValue(this.swagger.version);
+
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "basePath", this.swagger.basePath);
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "host", this.swagger.host);
+
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "schemes", this.swagger.schemes);
+
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "consumes", this.swagger.consumes);
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "produces", this.swagger.produces);
+
+            writeInfo(writer);
+
+            writeDefinitions(writer);
+
+            writePaths(writer);
+
+        }
+
+        private void writeDefinitions(JsonWriter writer)
+        {
+            if(this.swagger.entityDefinitions.Count != 0 )
+            {
+                writer.WritePropertyName("definitions");
+                writer.WriteStartObject();
+
+                foreach (var definition in this.swagger.entityDefinitions)
+                {
+                    writeDefinition(writer, definition.Value);
+                }
+
+                writer.WriteEnd();
+            }
+
+        }
+        private void writeDefinition(JsonWriter writer, EntityDefinition entityDefinition)
+        {
+            writer.WritePropertyName(entityDefinition.element.Name);
+            writer.WriteStartObject();
+            Element enumeration;
+            List<string> requireds = new List<string>();
+
+            if(entityDefinition.element.Attributes.Count != 0 || entityDefinition.attributesByReference.Count != 0)
+            {
+                writer.WritePropertyName("properties");
+                writer.WriteStartObject();
+
+                foreach (EA.Attribute attribute in entityDefinition.element.Attributes)
+                {
+                    writer.WritePropertyName(attribute.Name);
+                    writer.WriteStartObject();
+
+                    if ( ((Boolean)eaUtils.taggedValuesUtils.get(attribute, "Obligatorio", "false").asBoolean() ) )
+                    {
+                        requireds.Add(attribute.Name);
+                    }
+
+                    // solo emuns?
+                    if(attribute.ClassifierID != 0)
+                    {
+                        writer.WritePropertyName("enum");
+                        writer.WriteStartArray();
+
+                        enumeration = eaUtils.repository.GetElementByID(attribute.ClassifierID);
+
+                        foreach(EA.Attribute enumAttribute in enumeration.Attributes)
+                        {
+                            writer.WriteValue(enumAttribute.Name);
+                        }
+
+                        writer.WriteEndArray();
+                        writer.WritePropertyName("type");
+                        writer.WriteValue("string");
+                    }
+                    else
+                    {
+                        jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "type", attribute.Type);
+                        jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "format", eaUtils.taggedValuesUtils.get(attribute, "Formato", null).asString());
+                    }
+
+                    writer.WriteEnd();
+                }
+                
+                foreach( var attributeByRefenceItem in entityDefinition.attributesByReference )
+                {
+                    writer.WritePropertyName(attributeByRefenceItem.Key);
+                    writer.WriteStartObject();
+
+                    if ( attributeByRefenceItem.Value.isArray )
+                    {
+                        writer.WritePropertyName("items");
+
+                        writer.WriteStartObject();
+
+                        writer.WritePropertyName("$ref");
+                        writer.WriteValue("#/definitions/" + entityDefinition.element.Name);
+
+                        writer.WriteEnd();
+
+                        writer.WritePropertyName("type");
+                        writer.WriteValue("array");
+                    }
+                    else
+                    {
+                        writer.WritePropertyName("$ref");
+                        writer.WriteValue("#/definitions/" + entityDefinition.element.Name);
+                    }
+                    
+                    if( (Boolean)attributeByRefenceItem.Value.isRequired )
+                    {
+                        requireds.Add(attributeByRefenceItem.Key);
+                    }
+
+                    writer.WriteEnd();
+                }
+                // end Properties
+                writer.WriteEnd();
+            }
+
+            if(requireds.Count != 0 )
+            {
+                writer.WritePropertyName("required");
+                writer.WriteStartArray();
+
+                foreach( var required in requireds)
+                {
+                    writer.WriteValue(required);
+                }
+
+                writer.WriteEnd();
+            }
+            // end Entity
+            writer.WriteEnd();
+        }
+        private void writeInfo(JsonWriter writer)
+        {
+            writer.WritePropertyName("info");
+            writer.WriteStartObject();
+
+            // title es obligatorio
+            if( ! jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "title", this.swagger.info.title))
+            {
+                eaUtils.elementUtils.addDefect(swaggerElement, "Info.title", "Este dato es obligatorio");
+
+            }
+            if ( ! jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "version", this.swagger.info.version))
+            {
+                eaUtils.elementUtils.addDefect(swaggerElement, "Info.version", "Este dato es obligatorio");
+            }
+
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "description", this.swagger.info.description);
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "termsOfService", this.swagger.info.termsOfService);
+
+            writeContact(writer);
+            writeLicense(writer);
+
+            writer.WriteEnd();
+        }
+
+        private void writeContact(JsonWriter writer)
+        {
+            if(this.swagger.info.contact != null)
+            {
+                writer.WritePropertyName("contact");
+                writer.WriteStartObject();
+
+                Boolean canWriteName = jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "name", this.swagger.info.contact.name);
+                Boolean canWriteUrl = jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "url", this.swagger.info.contact.url);
+                Boolean canWriteEmail = jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "email", this.swagger.info.contact.email);
+
+                if( ! canWriteEmail && ! canWriteName && ! canWriteUrl )
+                {
+                    eaUtils.elementUtils.addDefect(swaggerElement, "Contact", "Si desea incluir este dato complete al menos uno de name, url, email.");
+                }
+                writer.WriteEnd();
+            }
+        }
+
+        private void writeLicense(JsonWriter writer)
+        {
+            if (this.swagger.info.license != null)
+            {
+                writer.WritePropertyName("license");
+                writer.WriteStartObject();
+
+                Boolean canWriteName = jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "license", this.swagger.info.license.name);
+                Boolean canWriteUrl = jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "url", this.swagger.info.contact.url);
+
+                if (!canWriteName && !canWriteUrl)
+                {
+                    eaUtils.elementUtils.addDefect(swaggerElement, "License", "Si desea incluir este dato complete al menos uno de name, url.");
+                }
+                writer.WriteEnd();
+            }
+        }
+        private void writePaths(JsonWriter writer)
+        {
+            writer.WritePropertyName("paths");
+            writer.WriteStartObject();
+
+            foreach (KeyValuePair<string, PathItem> entry in this.swagger.paths)
+            {
+                writePath( writer, entry.Value );
+            }
+
+            writer.WriteEnd();
+        }
+        private void writePath(JsonWriter writer, PathItem pathItem)
+        {
+            writer.WritePropertyName(pathItem.path);
+            writer.WriteStartObject();
+
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "consumes", pathItem.consumes);
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "produces", pathItem.produces);
+
+            writeOperation(writer, pathItem.delete);
+            writeOperation(writer, pathItem.get);
+            writeOperation(writer, pathItem.head);
+            writeOperation(writer, pathItem.options);
+            writeOperation(writer, pathItem.patch);
+            writeOperation(writer, pathItem.post);
+            writeOperation(writer, pathItem.put);
+
+            writer.WriteEnd();
+
+        }
+        private void writeOperation( JsonWriter writer, Operation operation)
+        {
+            if ( operation != null)
+            {
+                writer.WritePropertyName(operation._name);
+                writer.WriteStartObject();
+
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "summary", operation.summary);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "description", operation.description);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "operationId", operation.operationId);
+
+                writeParameters( writer, operation.parameters );
+
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "consumes", operation.consumes);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "produces", operation.produces);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "schemes", operation.schemes);
+                writer.WritePropertyName("deprecated");
+                writer.WriteValue(operation.deprecated);
+
+                writeResponses(writer, operation.responses);
+
+                writer.WriteEnd();
+            }
+        }
+
+        private void writeParameters(JsonWriter writer, List<modelo.Parameter> parameters)
+        {
+            if( parameters.Count != 0 )
+            {
+                writer.WritePropertyName("parameters");
+                writer.WriteStartArray();
+
+                foreach( var parameter in parameters)
+                {
+                    try
+                    {
+                        writeParameter(writer, parameter);
+                    }
+                    catch ( Exception e)
+                    {
+                        eaUtils.printOut(e.ToString());
+                    }
+                }
+                writer.WriteEndArray();
+            }
+        }
+        private void writeParameter( JsonWriter writer, modelo.Parameter parameter )
+        {
+            writer.WriteStartObject();
+
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "description", parameter.description);
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "in", parameter.paramenterIn.inType);
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "name", parameter.name);
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "required", parameter.required);
+
+            if ( parameter.paramenterIn.isInBody() )
+            {
+                if(parameter.paramenterIn.inBody.schema != null && parameter.paramenterIn.inBody.schema.@ref != null )
+                {
+                    writer.WritePropertyName("schema");
+                    writer.WriteStartObject();
+
+                    writer.WritePropertyName("$ref");
+                    writer.WriteValue(parameter.paramenterIn.inBody.schema.@ref);
+
+                    writer.WriteEnd();
+                }
+            }
+            else
+            {
+                if(parameter.paramenterIn.notInBody != null && parameter.paramenterIn.notInBody.@enum != null && parameter.paramenterIn.notInBody.@enum.Count != 0 )
+                {
+                    writer.WritePropertyName("enum");
+                    writer.WriteStartArray();
+
+                    foreach ( var item in parameter.paramenterIn.notInBody.@enum )
+                    {
+                        writer.WriteValue(item);
+                    }
+                    writer.WriteEndArray();
+                }
+            }
+
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "type", parameter.type);
+
+            writer.WriteEnd();
+        }
+
+        private void writeResponses(JsonWriter writer, Dictionary<string, Response> responses)
+        {
+            writer.WritePropertyName("responses");
+            writer.WriteStartObject();
+
+            foreach (KeyValuePair<string, Response> entry in responses)
+            {
+                writeResponse(writer, entry.Value);
+            }
+
+            writer.WriteEnd();
+        }
+
+        private void writeResponse(JsonWriter writer, Response response)
+        {
+            writer.WritePropertyName(response.httpStatusCode);
+            writer.WriteStartObject();
+
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "description", response.description);
+
+            if (response.@ref != null)
+            {
+                writer.WritePropertyName("$ref");
+                writer.WriteValue(response.@ref);
+            }
+            else if ( response.schema != null )
+            {
+                writeJsonSchema(writer, response.schema);
+            }
+
+            writeHeaders(writer, response.headers );
+
+            writer.WriteEnd();
+        }
+        private void writeHeaders(JsonWriter writer, Dictionary<string, Header> headers)
+        {
+            if( headers.Count != 0)
+            {
+                writer.WritePropertyName("headers");
+                writer.WriteStartObject();
+
+                foreach ( var item in headers )
+                {
+                    writer.WritePropertyName(item.Key);
+                    writer.WriteStartObject();
+
+                    writeItem( writer, item.Value);
+
+                    writer.WriteEnd();
+                }
+
+                writer.WriteEnd();
+            }
+        }
+
+        private void writeItem(JsonWriter writer, Header item)
+        {
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "maxProperties", item.collectionFormat);
+            jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "description", item.description);
+
+            writeJsonSchemaCommon(writer, item);
+        }
+
+        private void writeJsonSchema(JsonWriter writer, JsonSchema schema)
+        {
+            writeJsonSchema(writer, schema, "schema");
+        }
+
+        private void writeJsonSchema(JsonWriter writer, JsonSchema schema, string propertyName )
+        {
+            if (schema != null)
+            {
+                if (propertyName != null)
+                {
+                    writer.WritePropertyName(propertyName);
+                    writer.WriteStartObject();
+                }
+
+                writer.WritePropertyName("required");
+                writer.WriteValue(schema.required);
+
+                if (schema.@ref != null)
+                {
+                    // @ TODO: hardcodeo #definitions hasta decidir sobre el tema. 
+                    writer.WritePropertyName("$ref");
+                    writer.WriteValue("#/definitions/" + schema.@ref);
+                }
+                else
+                {
+                    jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "maxProperties", schema.maxProperties);
+                    jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "minProperties", schema.minProperties);
+
+                    writeJsonSchemaCommon(writer, schema);
+                }
+
+                if (propertyName != null)
+                {
+                    writer.WriteEnd();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Este método podrá ser llamado desde diferentes lugares y cada uno deberá poner el nombre de la propiedad que lo contiene.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="schema"></param>
+        private void writeJsonSchemaCommon(JsonWriter writer, JsonSchemaCommon schema)
+        {
+            if (schema != null)
+            {
+                // @ TODO este default se tiene que escribir según sea el tipo
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "default", schema.@default );
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "enum", schema.@enum, "emun");
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "exclusiveMaximum", schema.exclusiveMaximum);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "exclusiveMinimum", schema.exclusiveMinimum);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "format", schema.format);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "maximum", schema.maximum);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "maxItems", schema.maxItems);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "maxLength", schema.maxLength);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "minimum", schema.minimum);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "minItems", schema.minItems);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "minLength", schema.minLength);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "multipleOf", schema.multipleOf);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "pattern", schema.pattern);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "type", schema.type);
+                jsonUtils.writePorpertyIfNotNullOrEmpty(writer, "uniqueItems", schema.uniqueItems);
+            }
+        }
+    }
+}

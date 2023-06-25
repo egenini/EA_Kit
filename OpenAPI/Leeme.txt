@@ -1,0 +1,4 @@
+﻿Al querer incorporar nuget package de Miscrosoft.OpenApi y la Microsoft.OpenApi.Readers tira error, para solucionar esto hice:
+fui a: c:\Users\Edgardo\.nuget\packages\Microsoft.OpenApi.Readers\1.4.1\lib\
+y cree un directorio con nombre net452 y copie todo lo que está en netstandard2.0 y pegué dentro del directorio creado, luego
+volví a intentar cargar desde nuguet package y se resolvió el problema.

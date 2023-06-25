@@ -1,0 +1,865 @@
+﻿using EA;
+using RestFul.modelo;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace RestFul
+{
+
+    class InversaSwagger
+    {
+        string[] SWAGGER__ROOT = { "swagger", "consumes", "produces"};
+        string[] SWAGGER__INFO = { "title", "description", "termsOfService", "version" };
+
+        EAUtils.EAUtils eaUtils;
+        Package rootPackage;
+        Package definicionPackage;
+        Package resumenPackage;
+        Element swaggerClass;
+
+        dynamic json;
+        List<Element> uris = new List<Element>();
+        Dictionary<string, Element> classes = new Dictionary<string, Element>();
+        Dictionary<string, Element> parameters = new Dictionary<string, Element>();
+        Dictionary<string, Element> paths = new Dictionary<string, Element>();
+        List<InterfaceInfo> interfaces = new List<InterfaceInfo>();
+        EA.Element servicio;
+        Dictionary<string, Element> mediaTypes = new Dictionary<string, Element>();
+
+        public InversaSwagger(EAUtils.EAUtils eaUtils)
+        {
+            this.eaUtils = eaUtils;
+        }
+
+        public void go(Element swaggerClass)
+        {
+            this.swaggerClass = swaggerClass;
+
+            if (swaggerClass.Notes.Length != 0)
+            {
+                /*
+                JSONUtils jutils = new JSONUtils(eaUtils);
+                object json = jutils.fromString(swaggerClass.Notes);
+                */
+                json = Newtonsoft.Json.Linq.JObject.Parse(swaggerClass.Notes);
+
+                // establecemos los paquetes
+                rootPackage = eaUtils.repository.GetPackageByID(swaggerClass.PackageID);
+
+                // paquete definicion
+                foreach (Package currentPackage in rootPackage.Packages)
+                {
+                    if (currentPackage.Name == "Definición" || currentPackage.Name == "Definicion" || currentPackage.Name == "Definition")
+                    {
+                        definicionPackage = currentPackage;
+                        //break;
+                    }
+                    if (currentPackage.Name == "Resumen" || currentPackage.Name == "Summary" )
+                    {
+                        resumenPackage = currentPackage;
+                    }
+                }
+
+                string packageName = null;
+                if (definicionPackage == null)
+                {
+
+                    if( this.eaUtils.repositoryConfiguration.getLanguage() == "es")
+                    {
+                        packageName = "Definition";
+                    }
+                    else
+                    {
+                        packageName = "Definición";
+                    }
+                    definicionPackage = (Package)rootPackage.Packages.AddNew(packageName, "Class");
+                    definicionPackage.Update();
+
+                }
+
+                if (resumenPackage == null)
+                {
+                    packageName = null;
+
+                    if (this.eaUtils.repositoryConfiguration.getLanguage() == "es")
+                    {
+                        packageName = "Resumen";
+                    }
+                    else
+                    {
+                        packageName = "Summary";
+                    }
+
+                    resumenPackage = (Package)rootPackage.Packages.AddNew(packageName, "Class");
+                    resumenPackage.Update();
+                }
+
+                this.generateUri();
+                this.generateReferences();
+                this.generateInterfaces();
+
+                try
+                {
+                    this.generarServicio();
+                }
+                catch (Exception e)
+                {
+                    eaUtils.printOut(e.ToString());
+                }
+
+                try
+                {
+                    this.generateModel();
+                }
+                catch (Exception e)
+                {
+                    eaUtils.printOut(e.ToString());
+                }
+
+                try
+                {
+                    SwaggerResumen resumen = new SwaggerResumen(this.eaUtils, resumenPackage, definicionPackage);
+                    resumen.makeSummary();
+                }
+                catch (Exception e)
+                {
+                    eaUtils.printOut(e.ToString());
+                }
+            }
+        }
+
+        private void generateUri()
+        {
+            Element uri;
+            EA.Attribute attr;
+
+            foreach (dynamic scheme in json.schemes)
+            {
+                uri = definicionPackage.Elements.AddNew(scheme.Value + "://" + json.host + json.basePath, "Interface");
+                uri.Stereotype = "URI";
+                uri.Update();
+
+                attr = (EA.Attribute)uri.Attributes.AddNew("schema", "String");
+                attr.Default = scheme.Value;
+                attr.Update();
+                attr = (EA.Attribute)uri.Attributes.AddNew("host", "String");
+                attr.Default = json.host;
+                attr.Update();
+                attr = (EA.Attribute)uri.Attributes.AddNew("basePath", "String");
+                attr.Default = json.basePath;
+                attr.Update();
+
+                uris.Add(uri);
+            }
+        }
+
+        private void generateReferences()
+        {
+            // Esto puede contener una variedad de cosas tales como definiciones de:
+            // Parámetros, la forma de reconocerlo es si existe un atributo "in"
+            // Paths, la forma de reconocerlo es si el nombre (Name) comienza por una barra /
+            // y Clases, la forma de reconocerla es por descarte de las anteriores.
+            foreach (dynamic definition in json.definitions)
+            {
+                if (definition.Name.Contains("/"))
+                {
+                    // es path
+                    eaUtils.printOut("es una path");
+                }
+                else
+                {
+                    try
+                    {
+                        if (definition.@in == "query")
+                        {
+                            // es un parámetro
+                            eaUtils.printOut("es un parámetro");
+                        }
+                        else
+                        {
+                            // es una clase
+                            eaUtils.printOut("es una clase");
+                            generateClassReference(definition.Name);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // es una clase
+                        eaUtils.printOut("es una clase");
+                        generateClassReference(definition.Name);
+                    }
+                }
+            }
+        }
+
+        private Element generateClassReference(string className)
+        {
+            Element message = null;
+            Dictionary<string, Element> requireds = new Dictionary<string, Element>();
+            string classNameFind;
+
+            if (!classes.ContainsKey("#/definitions/" + className))
+            {
+                message = (Element)definicionPackage.Elements.AddNew(className, "Class");
+
+                message.Update();
+
+                classes.Add("#/definitions/" + className, message);
+
+                try
+                {
+                    foreach (dynamic required in json.definitions[className].required)
+                    {
+                        requireds.Add(required.Value, message);
+                    }
+                }
+                catch (Exception) { }
+
+
+                foreach (dynamic property in json.definitions[className].properties)
+                {
+                    if (json.definitions[className].properties[property.Name]["$ref"] != null)
+                    {
+                        classNameFind = getClassNameFromRef(json.definitions[className].properties[property.Name]);
+                        generateAssociation(message, property.Name, classNameFind, requireds, false);
+                    }
+                    else if (json.definitions[className].properties[property.Name].type == "array")
+                    {
+                        if (json.definitions[className].properties[property.Name].items != null) // esto deberia ser una asociacion
+                        {
+                            if (json.definitions[className].properties[property.Name].items.type != null)
+                            {
+                                // esto deberia ser un atributo con una cardinalidad  de 0 a N
+                            }
+                            else if (json.definitions[className].properties[property.Name].items["$ref"] != null)
+                            {
+                                classNameFind = getClassNameFromRef(json.definitions[className].properties[property.Name].items);
+
+                                generateAssociation(message, property.Name, classNameFind, requireds, true);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        EA.Attribute attr = message.Attributes.AddNew(property.Name, "");
+                        attr.Stereotype = "ExtendedAttribute";
+
+                        if (json.definitions[className].properties[property.Name]["enum"] != null)
+                        {
+                            EA.Element enumReference = generateEnum(message, attr, json.definitions[className].properties[property.Name]["enum"]);
+                            attr.Type = enumReference.Name;
+                            attr.ClassifierID = enumReference.ElementID;
+                        }
+                        else
+                        {
+                            attr.Type = json.definitions[className].properties[property.Name].type;
+                        }
+
+                        attr.Update();
+
+                        if (requireds.ContainsKey(property.Name))
+                        {
+                            eaUtils.taggedValuesUtils.set(attr, "Obligatorio", "Si");
+                        }
+                        else
+                        {
+                            eaUtils.taggedValuesUtils.set(attr, "Obligatorio", "No");
+                        }
+
+                        if (json.definitions[className].properties[property.Name].format != null)
+                        {
+                            eaUtils.taggedValuesUtils.set(attr, "Formato", json.definitions[className].properties[property.Name].format.Value);
+                            attr.Update();
+                        }
+                    }
+                }
+            }
+            return message;
+        }
+
+        private void generateAssociation(Element element, string propKey, string classNameFind, Dictionary<string, Element> requireds, Boolean asArray)
+        {
+
+            Element referencedElement = getReferenced(classNameFind);
+            Connector connection;
+
+            connection = eaUtils.connectorUtils.addConnectorAssociation(element, referencedElement, null, null);
+
+            connection.SupplierEnd.Role = propKey;
+            connection.Update();
+
+            if (requireds.ContainsKey(propKey))
+            {
+                connection.SupplierEnd.Cardinality = (asArray ? "1..*" : "1");
+                eaUtils.taggedValuesUtils.set(connection, "Obligatorio", "Si");
+            }
+            else
+            {
+                connection.SupplierEnd.Cardinality = (asArray ? "0..*" : "0..1");
+                eaUtils.taggedValuesUtils.set(connection, "Obligatorio", "No");
+            }
+
+            connection.Update();
+        }
+
+        private string getClassNameFromRef(dynamic reference)
+        {
+            string[] referenced = reference["$ref"].Value.Split('/');
+
+            return referenced[referenced.Length - 1];
+        }
+
+        private Element getReferenced(string classNameFind)
+        {
+            Element referencedElement = getMessage(classNameFind);
+
+            if (referencedElement == null)
+            {
+                referencedElement = generateClassReference(classNameFind);
+
+                //classes.Add("#/definitions/" + classNameFind, referencedElement);
+            }
+            return referencedElement;
+        }
+
+        private Element getMessage(string classNameFind)
+        {
+            Element message = null;
+            return classes.TryGetValue("#/definitions/" + classNameFind, out message) ? message : null;
+        }
+
+        private Element generateEnum(Element parent, EA.Attribute attr, dynamic enumeration)
+        {
+            EA.Element element;
+
+            element = (Element)parent.Elements.AddNew(attr.Name, "Enumeration");
+            element.Update();
+
+            foreach (var e in enumeration)
+            {
+                attr = element.Attributes.AddNew(e.Value, "enum");
+                attr.Update();
+            }
+            element.Attributes.Refresh();
+
+            return element;
+        }
+
+        private void generateInterfaces()
+        {
+            foreach (dynamic path in json.paths)
+            {
+                generateInterface(path.Name);
+            }
+        }
+
+        private void generateInterface(string path)
+        {
+            EA.Element eaInterface;
+            EA.Method operation;
+            InterfaceInfo interfaceInfo = new InterfaceInfo(path);
+            EA.Parameter parameter;
+
+            // esto objeto se tiene que reemplazar por el path completo desde el root json.
+            dynamic operationInfo;
+            dynamic parameterInfo;
+            string interfaceName;
+            dynamic responseInfo;
+
+            eaInterface = (Element)definicionPackage.Elements.AddNew("Interface", "Interface");
+
+            interfaceName = interfaceInfo.name.Substring(1, (interfaceInfo.name.Length - 2));
+            eaInterface.Name = EAUtils.StringUtils.toPascal( interfaceName );
+            eaInterface.Alias = path;
+
+            eaInterface.Update();
+
+            // ojo con esto porque no es algo generico sino que aplica solo para el caso de las telcos.
+            //setValueToTaggedValue(eaInterface, "TMFORUM endpoint", "" );
+
+            foreach (var operationKey in json.paths[path])
+            {
+                operationInfo = json.paths[path][operationKey.Name];
+                responseInfo = operationInfo.responses;
+
+                //interfaceInfo.operationInfo = {};
+                interfaceInfo.operationData.Add( new OperationData( path, operationKey.Name) );
+
+                operation = eaInterface.Methods.AddNew(operationKey.Name, "");
+                operation.Alias = operationInfo.operationId.Value;
+                operation.Notes = operationInfo.summary.Value;
+
+                operation.Update();
+
+                // security
+                MethodConstraint precondition;
+                if (json.paths[path][operationKey.Name]["security"] != null)
+                {
+                    // esto es una lista de objetos
+                    foreach (var skey in json.paths[path][operationKey.Name]["security"])
+                    {
+                        // lista de string con la forma "key:value"
+                        foreach (var si in json.paths[path][operationKey.Name]["security"][skey])
+                        {
+                            precondition = operation.PreConditions.AddNew(json.paths[path][operationKey.Name]["security"][skey][si], "");
+                            // la precondicion es la key:value y las notas es la skey en el ejemplo de swagger es petstore_auth
+                            precondition.Notes = skey;
+                            precondition.Update();
+                        }
+                    }
+                }
+
+                if (json.paths[path][operationKey.Name]["responses"] != null)
+                {
+                    Boolean addMultiplicity = false;
+
+                    foreach (var responseKey in json.paths[path][operationKey.Name]["responses"])
+                    {
+                        addMultiplicity = false;
+                        // el schema puede contener "$ref", type=array con items  o type=string
+                        if (json.paths[path][operationKey.Name]["responses"][responseKey.Name].schema != null)
+                        {
+                            EA.Connector connector;
+                            Element message = null;
+                            if (json.paths[path][operationKey.Name]["responses"][responseKey.Name]["$ref"] != null)
+                            {
+                                try
+                                {
+                                    message = getMessage(getClassNameFromRef(json.paths[path][operationKey.Name]["responses"][responseKey.Name].schema));
+                                }
+                                catch (Exception) { }
+
+                            }
+                            else if (json.paths[path][operationKey.Name]["responses"][responseKey.Name].schema["$ref"] != null)
+                            {
+                                try
+                                {
+                                    message = getMessage( getClassNameFromRef(json.paths[path][operationKey.Name]["responses"][responseKey.Name].schema) );
+                                }
+                                catch (Exception) { }
+                            }
+                            else if (json.paths[path][operationKey.Name]["responses"][responseKey.Name].schema.type.Value == "array")
+                            {
+                                try
+                                {
+                                    addMultiplicity = true;
+                                    if (json.paths[path][operationKey.Name]["responses"][responseKey.Name].schema.items["$ref"] != null)
+                                    {
+                                        message = getMessage( getClassNameFromRef(responseInfo[responseKey.Name].schema.items) );
+                                    }
+                                }
+                                catch (Exception) { }
+                            }
+                            if (message != null)
+                            {
+                                connector = eaUtils.connectorUtils.addConnectorDependency(eaInterface, message, null, null);
+                                connector.Name = operationKey.Name;
+                                connector.SupplierEnd.Role = "response." + responseKey.Name;
+
+                                if( addMultiplicity )
+                                {
+                                    connector.SupplierEnd.Cardinality = "1..*";
+                                }
+
+                                connector.Update();
+
+                                eaUtils.taggedValuesUtils.set(connector, "description", json.paths[path][operationKey.Name]["responses"][responseKey.Name].description.Value);
+
+                                if (json.paths[path][operationKey.Name]["responses"][responseKey.Name].headers != null)
+                                {
+                                    header2taggedValues(connector, path, operationKey.Name, responseKey.Name);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // responseKey 
+                            /*
+                                responses: {
+                                          400: {
+                                            description: "Invalid ID supplied"
+                                          },
+                                          404: {
+                                            description: "Pet not found"
+                                          },
+                                          405: {
+                                            description: "Validation exception"
+                                          }
+                                        }					
+                            */
+                            // cada codigo es una clase, el nombre de la clase es la descripcion
+                            // se hace una relacion de asociacion el nombre es la operacion y el rol es en este caso
+                            // reponse +"."+ codigo (400)
+
+                            try
+                            {
+                                string responseCode = responseKey.Name;
+
+                                Element responseCodeElement = getMessage4xx(responseCode);
+                                if (responseCodeElement == null)
+                                {
+                                    responseCodeElement = definicionPackage.Elements.AddNew(responseCode, "Class");
+                                    responseCodeElement.Stereotype = "ErrorMessage";
+                                    responseCodeElement.Update();
+                                    EA.Attribute responseDescription = responseCodeElement.Attributes.AddNew("description", "string");
+
+                                    responseDescription.Default = responseInfo[responseKey.Name].description.Value;
+                                    responseDescription.Update();
+
+                                    this.classes["#/4xx/" + responseCode] = responseCodeElement;
+                                }
+                                Connector connector = eaUtils.connectorUtils.addConnectorDependency(eaInterface, responseCodeElement, null, null);
+                                connector.Name = operationKey.Name;
+                                connector.SupplierEnd.Role = "response." + responseCode;
+                                connector.Update();
+                            }
+                            catch (Exception e)
+                            {
+                                this.eaUtils.printOut(e.ToString());
+                            }
+                        }
+                    }
+                }
+
+                int paramIndex = 0;
+                if(operationInfo != null && operationInfo.parameters != null)
+                {
+                    foreach (var i in operationInfo.parameters)
+                    {
+                        parameterInfo = i;
+
+                        eaUtils.printOut(parameterInfo.name.Value);
+
+                        parameter = operation.Parameters.AddNew(parameterInfo.name.Value, (parameterInfo.type == null ? parameterInfo.name.Value : parameterInfo.type.Value));
+                        parameter.Notes = parameterInfo.description != null ? parameterInfo.description.Value : "";
+                        parameter.Alias = parameterInfo.operationId != null ? parameterInfo.operationId.Value : "";
+                        parameter.Position = paramIndex++;
+
+                        parameter.Update();
+
+                        eaUtils.taggedValuesUtils.set(parameter, "in", parameterInfo["in"].Value);
+
+                        eaUtils.taggedValuesUtils.set(parameter, "required", parameterInfo["required"].Value ? "true" : "false");
+
+                        if (parameterInfo["enum"] != null)
+                        {
+                            eaUtils.taggedValuesUtils.set(parameter, "enum", Newtonsoft.Json.JsonConvert.SerializeObject(parameterInfo["enum"]));
+                        }
+
+                        if (parameterInfo.schema != null)
+                        {
+                            if (parameterInfo.schema["$ref"] != null)
+                            {
+                                Element message = getMessage(getClassNameFromRef(parameterInfo.schema));
+                                Connector connector = eaUtils.connectorUtils.addConnectorDependency(eaInterface, message, null, null);
+                                connector.Name = operation.Name;
+                                connector.SupplierEnd.Role = "request";
+                                connector.Update();
+
+                                parameter.ClassifierID = message.ElementID.ToString();
+
+                                parameter.Update();
+
+                            }
+                            if (parameterInfo.schema["type"] != null && parameterInfo.schema["type"].Value == "array")
+                            {
+                                Element message = getMessage(getClassNameFromRef(parameterInfo.schema.items));
+                                Connector connector = eaUtils.connectorUtils.addConnectorDependency(eaInterface, message, null, null);
+                                connector.Name = operation.Name;
+                                connector.SupplierEnd.Role = "request";
+                                connector.SupplierEnd.Cardinality = (parameterInfo["required"].Value ? "1" : "0") + "..*";
+                                connector.Update();
+                            }
+                        }
+                    }
+                    operation.Parameters.Refresh();
+                }
+            }
+
+            eaInterface.Methods.Refresh();
+
+            definicionPackage.Elements.Refresh();
+
+            interfaceInfo.EAInterface = eaInterface;
+
+            interfaces.Add(interfaceInfo);
+        }
+
+        private void generarServicio()
+        {
+            
+            EA.Attribute attr;
+
+            string serviceName = json.basePath.Value;
+
+            try
+            {
+                serviceName = EAUtils.StringUtils.toPascal(json.basePath.Value.Replace("/", "_").Substring(1));
+            }
+            catch(Exception) {}
+            
+            servicio = (Element)definicionPackage.Elements.AddNew(serviceName, "Component");
+            servicio.Stereotype = "Service";
+
+            servicio.Update();
+            
+	        foreach(var key in SWAGGER__ROOT)
+            {
+                attr = (EA.Attribute)swaggerClass.Attributes.AddNew(key, "String");
+                if (json[key] != null)
+                {
+                    attr.Default = json[key].Value;
+                    attr.Update();
+                }
+            }
+
+            Element infoElement = null; 
+            foreach( Element infoCurrentElement in swaggerClass.Elements )
+            {
+                if(infoCurrentElement.Name == "Info" )
+                {
+                    infoElement = infoCurrentElement;
+                    break;
+                }
+            }
+
+            if( infoElement == null )
+            {
+                infoElement = (Element) swaggerClass.Elements.AddNew("Info", "Class");
+                infoElement.Update();
+
+                this.eaUtils.connectorUtils.addConnectorAssociation(swaggerClass, infoElement, null, null, EAUtils.ConnectorUtils.DIRECTION__SOURCE_DESTINATION);
+            }
+
+	        foreach(var key in SWAGGER__INFO)
+            {
+                attr = null;
+                foreach ( EA.Attribute attrCurrent in infoElement.Attributes)
+                {
+                    if(attrCurrent.Name == key)
+                    {
+                        attr = attrCurrent;
+                        break;
+                    }
+                }
+                if( attr == null)
+                {
+                    attr = (EA.Attribute)infoElement.Attributes.AddNew( key, "String");
+
+                }
+                attr.Default = json.info[key] == null ? "" : json.info[key].Value;
+
+                attr.Update();
+            }
+
+            // contacto y licencia van por relación (pueden estar en cualquier parte y ser reusados)
+            List<ArrayList> elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(false, infoElement, EAUtils.ConnectorUtils.CONNECTOR__ASSOCIATION, null, "Class", null);
+            Element currentElement;
+            Element contactElement = null;
+            Element licenseElement = null;
+
+            foreach(ArrayList elementAndConnector in elementsAndConnectors )
+            {
+                currentElement = (Element)elementAndConnector[0];
+
+                if( currentElement.Name == "Contact")
+                {
+                    contactElement = currentElement;
+                }
+                if ( currentElement.Name == "License")
+                {
+                    licenseElement = currentElement;
+                }
+            }
+
+            if (contactElement == null )
+            {
+                contactElement = (Element)swaggerClass.Elements.AddNew("Contact", "Class");
+                contactElement.Update();
+
+                eaUtils.connectorUtils.addConnectorAssociation(infoElement, contactElement, null, null);
+            }
+
+            if( json["contact"] != null )
+            {
+                string attrName = "name";
+                if( json.contact[attrName] != null )
+                {
+                    EAUtils.AttributeUtils.synchronize(contactElement, attrName, "string", json.contact[attrName]);
+                }
+                attrName = "url";
+                if (json.contact[attrName] != null)
+                {
+                    EAUtils.AttributeUtils.synchronize(contactElement, attrName, "string", json.contact[attrName]);
+                }
+                attrName = "email";
+                if (json.contact[attrName] != null)
+                {
+                    EAUtils.AttributeUtils.synchronize(contactElement, attrName, "string", json.contact[attrName]);
+                }
+            }
+            if (json["license"] != null)
+            {
+                string attrName = "name";
+                if (json.contact[attrName] != null)
+                {
+                    EAUtils.AttributeUtils.synchronize(contactElement, attrName, "string", json.contact[attrName]);
+                }
+                attrName = "url";
+                if (json.contact[attrName] != null)
+                {
+                    EAUtils.AttributeUtils.synchronize(contactElement, attrName, "string", json.contact[attrName]);
+                }
+            }
+            swaggerClass.Elements.Refresh();
+            definicionPackage.Elements.Refresh();
+        }
+
+        private void header2taggedValues(Connector connector, string path, string operationKey, string responseKey)
+        {
+	        foreach(var headerKey in json.paths[path][operationKey]["responses"][responseKey].headers)
+            {
+		        foreach(var headerDataKey in json.paths[path][operationKey]["responses"][responseKey].headers[headerKey.Name])
+                {
+                    eaUtils.taggedValuesUtils.set(connector, "header." + headerKey.Name + "." + headerDataKey.Name, json.paths[path][operationKey]["responses"][responseKey].headers[headerKey.Name][headerDataKey.Name].Value );
+                }
+            }
+        }
+
+        private Element getMessage4xx(string classNameFind)
+        {
+            Element message;
+            return (this.classes.TryGetValue("#/4xx/" + classNameFind, out message) ? message: null);
+        }
+
+        private void generateModel()
+        {
+            Element providedInterface;
+	
+	        foreach(var i in interfaces)
+            {
+                // exponer la interfaz en el servicio
+                providedInterface = exposeInterface(i.EAInterface);
+                producesConsumes(providedInterface, i);
+            }
+        }
+
+        private EA.Element exposeInterface(Element eaInterface)
+        {
+	        EA.Element providedInterface;
+            providedInterface = (EA.Element)servicio.EmbeddedElements.AddNew(eaInterface.Name, "ProvidedInterface");
+	        providedInterface.ClassifierID = eaInterface.ElementID;
+	        providedInterface.Stereotype = "RESTFul";
+	        providedInterface.Update();
+
+            eaUtils.connectorUtils.addConnectorInstantiation(providedInterface, eaInterface, null);
+	
+	        foreach( var uri in uris )
+	        {
+                eaUtils.connectorUtils.addConnectorAssociation(providedInterface, uri, null, null, EAUtils.ConnectorUtils.DIRECTION__SOURCE_DESTINATION);
+            }
+	        return providedInterface;
+        }
+
+        private void producesConsumes(Element providedInterface, InterfaceInfo interfazInfo)
+        {
+            string mediaTypeName;
+            Element mediaType;
+            
+            foreach(OperationData operationData in interfazInfo.operationData)
+            {
+                if (operationData.operationInfo(json)["consumes"] != null)
+                {
+                    // crear interfaz con el media type y hacer una relacion de dependencia
+                    foreach (var c in operationData.operationInfo(json)["consumes"])
+                    {
+                        mediaTypeName = c.Value;
+                        mediaType = getMediaType(mediaTypeName);
+                        Connector connector = eaUtils.connectorUtils.addConnectorDependency(providedInterface, mediaType, null, null);
+                        connector.SupplierEnd.Role = operationData.operation;
+                        connector.Update();
+                    }
+                }
+                if (operationData.operationInfo(json)["produces"] != null)
+                {
+                    // crear interfaz con el media type y hacer una relacion de realizacion
+                    foreach (var c in operationData.operationInfo(json)["produces"])
+                    {
+                        mediaTypeName = c.Value;
+                        mediaType = getMediaType(mediaTypeName);
+                        Connector connector = eaUtils.connectorUtils.addConnectorRealization(providedInterface, mediaType, null, null);
+                        connector.SupplierEnd.Role = operationData.operation;
+                        connector.Update();
+                    }
+                }
+            }
+        }
+
+        private Element getMediaType( string mediaTypeName )
+        {
+            Element mediaType;
+
+            if (! mediaTypes.TryGetValue(mediaTypeName, out mediaType))
+            {
+                mediaType = (Element)definicionPackage.Elements.AddNew("Interface", "Interface");
+                mediaType.Name = mediaTypeName;
+                mediaType.Stereotype = "mediaType";
+                mediaType.Update();
+                mediaTypes.Add(mediaTypeName, mediaType);
+            }
+            return mediaType;
+        }
+        
+    }
+
+    class InterfaceInfo
+    {
+        public List<string> parameters = new List<string>();
+        public string name;
+        public string path;
+        public Element EAInterface;
+        public List<OperationData> operationData = new List<OperationData>();
+
+        public InterfaceInfo(string path)
+        {
+            string[] pathSplitted = path.Split('/');
+            this.name = "";
+
+            this.path = path;
+
+            foreach (string pathPart in pathSplitted)
+            {
+                if (pathPart.IndexOf("{") != -1)
+                {
+                    this.name += pathPart.Replace("{", "").Replace("}", "") + "_";
+                }
+                else
+                {
+                    this.name += pathPart + "_";
+                }
+            }
+        }
+    }
+
+    public class OperationData
+    {
+        public string path;
+        public string operation;
+
+        public OperationData(string path, string operation)
+        {
+            this.path = path;
+            this.operation = operation;
+        }
+
+        public dynamic operationInfo(dynamic json )
+        {
+            // json.paths["/products"].post
+
+            return json.paths[path][operation];
+        }
+    }
+}

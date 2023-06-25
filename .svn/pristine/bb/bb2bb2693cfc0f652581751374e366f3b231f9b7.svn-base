@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>7.10.3077</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E6067F34-A719-493A-95D3-67462EECF3C0}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon />
+    <AssemblyKeyContainerName />
+    <AssemblyName>RestFul</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>RestFul</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>0.0</OldToolsVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile />
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile />
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn />
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FastMember, Version=1.0.0.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.1.0\lib\net40\FastMember.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Interop.EA, Version=2.10.238.1, Culture=neutral, PublicKeyToken=d28e1c76302f6a17, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\Program Files (x86)\Sparx Systems\EA\Interop.EA.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="builder\SwaggerBuilder.cs" />
+    <Compile Include="DiagramUtils.cs" />
+    <Compile Include="EAUtilsLocal.cs" />
+    <Compile Include="ea\ServiceModel.cs" />
+    <Compile Include="FormSwagger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSwagger.Designer.cs">
+      <DependentUpon>FormSwagger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GenerarDesdeResumen.cs" />
+    <Compile Include="InversaSwagger.cs" />
+    <Compile Include="MainCommons.cs" />
+    <Compile Include="MainUtils.cs" />
+    <Compile Include="SwaggerResumen.cs" />
+    <Compile Include="JSONUtils.cs" />
+    <Compile Include="Main.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="modelo\ApiKey.cs" />
+    <Compile Include="modelo\APIKeyInValues.cs" />
+    <Compile Include="modelo\Basic.cs" />
+    <Compile Include="modelo\Contact.cs" />
+    <Compile Include="modelo\DataType.cs" />
+    <Compile Include="modelo\Definition.cs" />
+    <Compile Include="modelo\EntityDefinition.cs" />
+    <Compile Include="modelo\ExternalDoc.cs" />
+    <Compile Include="modelo\Header.cs" />
+    <Compile Include="modelo\In.cs" />
+    <Compile Include="modelo\Info.cs" />
+    <Compile Include="modelo\Item.cs" />
+    <Compile Include="modelo\JsonSchema.cs" />
+    <Compile Include="modelo\JsonSchemaCommon.cs" />
+    <Compile Include="modelo\License.cs" />
+    <Compile Include="modelo\Oauth2.cs" />
+    <Compile Include="modelo\Operation.cs" />
+    <Compile Include="modelo\Parameter.cs" />
+    <Compile Include="modelo\ParameterInBody.cs" />
+    <Compile Include="modelo\ParameterNotInBody.cs" />
+    <Compile Include="modelo\PathItem.cs" />
+    <Compile Include="modelo\Response.cs" />
+    <Compile Include="modelo\Schemes.cs" />
+    <Compile Include="modelo\Scopes.cs" />
+    <Compile Include="modelo\SecurityDefinition.cs" />
+    <Compile Include="modelo\SecurityRequirement.cs" />
+    <Compile Include="modelo\SecurityScheme.cs" />
+    <Compile Include="modelo\SecurityTypes.cs" />
+    <Compile Include="modelo\Swagger.cs" />
+    <Compile Include="modelo\Tag.cs" />
+    <Compile Include="Properties\Resources.en.Designer.cs">
+      <DependentUpon>Resources.en.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RestFulABM.cs" />
+    <Compile Include="RestFulController.cs" />
+    <Compile Include="ResumenValidador.cs" />
+    <Compile Include="SwaggerEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SwaggerEditor.Designer.cs">
+      <DependentUpon>SwaggerEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SwaggerMaster.cs" />
+    <Compile Include="ui\SwaggerInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\SwaggerInfo.Designer.cs">
+      <DependentUpon>SwaggerInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\SwaggerMain.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\SwaggerMain.Designer.cs">
+      <DependentUpon>SwaggerMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ui\SwaggerPrincipal.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ui\SwaggerPrincipal.Designer.cs">
+      <DependentUpon>SwaggerPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewJSON.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ViewJSON.Designer.cs">
+      <DependentUpon>ViewJSON.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewSwagger.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ViewSwagger.Designer.cs">
+      <DependentUpon>ViewSwagger.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="FormSwagger.resx">
+      <DependentUpon>FormSwagger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SwaggerEditor.resx">
+      <DependentUpon>SwaggerEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\SwaggerInfo.resx">
+      <DependentUpon>SwaggerInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\SwaggerMain.resx">
+      <DependentUpon>SwaggerMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\SwaggerPrincipal.resx">
+      <DependentUpon>SwaggerPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewJSON.resx">
+      <DependentUpon>ViewJSON.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\ServiceCommons\ServiceCommons\ServiceCommons.csproj">
+      <Project>{1ca64fcb-1413-4a72-8046-82c37e59ca70}</Project>
+      <Name>ServiceCommons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UIResources\UIResources\UIResources.csproj">
+      <Project>{06777893-2D2F-442C-90FA-0B4728BCCB21}</Project>
+      <Name>UIResources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA2Utils\EA2Utils.csproj">
+      <Project>{ac4d25e0-8a9c-4876-9cd8-53ce89718962}</Project>
+      <Name>EA2Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent />
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>

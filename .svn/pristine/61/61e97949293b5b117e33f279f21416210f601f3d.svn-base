@@ -1,0 +1,368 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using EA;
+
+namespace EAUtils
+{
+    public class TaggedValueWrapper
+    {
+        string value = null;
+
+        public TaggedValueWrapper( string value )
+        {
+            this.value = value;
+        }
+
+        public bool? asBoolean()
+        {
+            bool? nullableValue = null;
+            if (value != null)
+            {
+                nullableValue = (value == "" ? false : (value == "0" ? false : (value.ToLower() == "false" ? false : ( value.ToLower() == "no" ? false :  true) ))); ;
+            }
+            return nullableValue;
+        }
+
+        public Nullable<int> asInt(int defaultValue)
+        {
+            Nullable<int> returnValue = asInt() ;
+            return returnValue == null ? defaultValue : returnValue;
+        }
+
+        public Nullable<int> asInt()
+        {
+            Nullable<int> nullableValue = null;
+            int intValue;
+            if (value != null)
+            {
+                if (int.TryParse(value, out intValue))
+                {
+                    nullableValue = intValue;
+                }
+            }
+            return nullableValue;
+        }
+        public string asString()
+        {
+            return value;
+        }
+    }
+
+    public class TaggedValuesUtils
+    {
+        public const string ES__TIPO_DATO       = "Tipo de dato";
+        public const string ES__PRECISION       = "Precisión";
+        public const string ES__ESCALA          = "Escala";
+        public const string ES__OBLIGATORIO     = "Obligatorio";
+        public const string ES__FORMATO         = "Formato";
+        public const string ES__DOMINIO_VALORES = "Dominio de valores";
+
+        public const string EN__TIPO_DATO       = "Data type";
+        public const string EN__PRECISION       = "Precision";
+        public const string EN__ESCALA          = "Escale";
+        public const string EN__OBLIGATORIO     = "Requierd";
+        public const string EN__FORMATO         = "Format";
+        public const string EN__DOMINIO_VALORES = "Domain values";
+
+        public static readonly string[] ES_EXTEND_ATTRIBUTE_INFO = { ES__PRECISION, ES__ESCALA, ES__OBLIGATORIO, ES__FORMATO, ES__DOMINIO_VALORES };
+        public static readonly string[] EN_EXTEND_ATTRIBUTE_INFO = { EN__PRECISION, EN__ESCALA, EN__OBLIGATORIO, EN__FORMATO, EN__DOMINIO_VALORES };
+
+        private const string MEMO_VALUE = "<memo>";
+
+        public TaggedValueWrapper get(EA.Attribute attribute, string name, string defaultValue)
+        {
+            EA.AttributeTag taggedValue;
+            string value = defaultValue;
+
+            if (attribute.TaggedValues.Count != 0)
+            {
+                taggedValue = attribute.TaggedValues.GetByName(name);
+                if (taggedValue != null)
+                {
+                    value = taggedValue.Value;
+
+                    if (value == MEMO_VALUE)
+                    {
+                        value = taggedValue.Notes;
+                    }
+                }
+            }
+            return new TaggedValueWrapper(value);
+        }
+
+        public EA.TaggedValue getTaggedValue(Element element, string name)
+        {
+            EA.TaggedValue taggedValue = null;
+
+            if (element.TaggedValues.Count != 0)
+            {
+                try
+                {
+                    taggedValue = element.TaggedValues.GetByName(name);
+                    if (taggedValue == null)
+                    {
+                        taggedValue = element.TaggedValues.AddNew(name, "");
+                        taggedValue.Update();
+                    }
+                }
+                catch (Exception )
+                {
+                    taggedValue = element.TaggedValues.AddNew(name, "");
+                    taggedValue.Update();
+                    element.TaggedValues.Refresh();
+                }
+            }
+            else
+            {
+                taggedValue = element.TaggedValues.AddNew(name, "");
+                taggedValue.Update();
+                element.TaggedValues.Refresh();
+            }
+            return taggedValue;
+        }
+
+        public void set( EA.Attribute attribute,string name, string value)
+        {
+            EA.AttributeTag taggedValue;
+
+            if( attribute.TaggedValues.Count != 0 )
+            {
+                taggedValue = attribute.TaggedValues.GetByName(name);
+                if (taggedValue == null)
+                {
+                    taggedValue = attribute.TaggedValues.AddNew(name, "");
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                    attribute.TaggedValues.Refresh();
+
+                }
+                else
+                {
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                }
+            }
+            else
+            {
+                taggedValue = attribute.TaggedValues.AddNew(name, "");
+                taggedValue.Value = value;
+                taggedValue.Update();
+                attribute.TaggedValues.Refresh();
+            }
+        }
+
+        public TaggedValueWrapper get(EA.Connector connector, string name, string defaultValue)
+        {
+            EA.ConnectorTag taggedValue;
+            string value = defaultValue;
+
+            if (connector.TaggedValues.Count != 0)
+            {
+                taggedValue = connector.TaggedValues.GetByName(name);
+                if (taggedValue != null)
+                {
+                    value = taggedValue.Value;
+
+                    if (value == MEMO_VALUE)
+                    {
+                        value = taggedValue.Notes;
+                    }
+                }
+            }
+            return new TaggedValueWrapper(value);
+        }
+
+        public void set(EA.Connector connector, string name, string value)
+        {
+            EA.ConnectorTag taggedValue;
+
+            if (connector.TaggedValues.Count != 0)
+            {
+                taggedValue = connector.TaggedValues.GetByName(name);
+                if (taggedValue == null)
+                {
+                    taggedValue = connector.TaggedValues.AddNew(name, "");
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                    connector.TaggedValues.Refresh();
+
+                }
+                else
+                {
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                }
+            }
+            else
+            {
+                taggedValue = connector.TaggedValues.AddNew(name, "");
+                taggedValue.Value = value;
+                taggedValue.Update();
+                connector.TaggedValues.Refresh();
+            }
+        }
+        public TaggedValueWrapper get(EA.Parameter parameter, string name, string defaultValue)
+        {
+            EA.ParamTag taggedValue;
+            string value = defaultValue;
+
+            if (parameter.TaggedValues.Count != 0)
+            {
+                taggedValue = parameter.TaggedValues.GetByName(name);
+                if (taggedValue != null)
+                {
+                    value = taggedValue.Value;
+                }
+            }
+            return new TaggedValueWrapper(value);
+        }
+
+        public void set(EA.Parameter parameter, string name, string value)
+        {
+            EA.ParamTag taggedValue;
+
+            if (parameter.TaggedValues.Count != 0)
+            {
+                taggedValue = parameter.TaggedValues.GetByName(name);
+                if (taggedValue == null)
+                {
+                    taggedValue = parameter.TaggedValues.AddNew(name, "");
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                    parameter.TaggedValues.Refresh();
+
+                }
+                else
+                {
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                }
+            }
+            else
+            {
+                taggedValue = parameter.TaggedValues.AddNew(name, "");
+                taggedValue.Value = value;
+                taggedValue.Update();
+                parameter.TaggedValues.Refresh();
+            }
+        }
+
+        public TaggedValueWrapper get(EA.Method method, string name, string defaultValue)
+        {
+            EA.MethodTag taggedValue;
+            string value = defaultValue;
+
+            if (method.TaggedValues.Count != 0)
+            {
+                taggedValue = method.TaggedValues.GetByName(name);
+                if (taggedValue != null)
+                {
+                    value = taggedValue.Value;
+
+                    if (value == MEMO_VALUE)
+                    {
+                        value = taggedValue.Notes;
+                    }
+                }
+            }
+            return new TaggedValueWrapper(value);
+        }
+
+        public void set(EA.Method method, string name, string value)
+        {
+            EA.MethodTag taggedValue;
+
+            if (method.TaggedValues.Count != 0)
+            {
+                taggedValue = method.TaggedValues.GetByName(name);
+                if (taggedValue == null)
+                {
+                    taggedValue = method.TaggedValues.AddNew(name, "");
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                    method.TaggedValues.Refresh();
+
+                }
+                else
+                {
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                }
+            }
+            else
+            {
+                taggedValue = method.TaggedValues.AddNew(name, "");
+                taggedValue.Value = value;
+                taggedValue.Update();
+                method.TaggedValues.Refresh();
+            }
+        }
+
+        public TaggedValueWrapper get(EA.Element element, string name, string defaultValue)
+        {
+            EA.TaggedValue taggedValue;
+            string value = defaultValue;
+
+            if (element.TaggedValues.Count != 0)
+            {
+                taggedValue = element.TaggedValues.GetByName(name);
+                if (taggedValue != null)
+                {
+                    value = taggedValue.Value;
+
+                    if (value == MEMO_VALUE)
+                    {
+                        value = taggedValue.Notes;
+                    }
+                }
+            }
+            return new TaggedValueWrapper(value);
+        }
+
+        public void set(EA.Element element, string name, string value)
+        {
+            EA.TaggedValue taggedValue;
+
+            if (element.TaggedValues.Count != 0)
+            {
+                taggedValue = element.TaggedValues.GetByName(name);
+                if (taggedValue == null)
+                {
+                    taggedValue = element.TaggedValues.AddNew(name, "");
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                    element.TaggedValues.Refresh();
+
+                }
+                else
+                {
+                    taggedValue.Value = value;
+                    taggedValue.Update();
+                }
+            }
+            else
+            {
+                taggedValue = element.TaggedValues.AddNew(name, "");
+                taggedValue.Value = value;
+                taggedValue.Update();
+                element.TaggedValues.Refresh();
+            }
+        }
+
+        public Dictionary<string, string> getByPrefix(Connector connector, string prefix)
+        {
+            Dictionary<string, string> results = new Dictionary<string, string>();
+
+            foreach( ConnectorTag tag in connector.TaggedValues)
+            {
+                if( tag.Name.StartsWith( prefix ) )
+                {
+                    results.Add(tag.Name, tag.Value);
+                }
+            }
+            return results;
+        }
+    }
+}

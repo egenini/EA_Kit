@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EAUtils
+{
+    /// <summary>
+    /// Convierte una clase de un modelo a una clase con todos sus atributos, sea que estos esten difinidos por relaciones
+    /// tales como asociación, generalizacion y/o realización
+    /// </summary>
+    class ModelClass2RealClass
+    {
+
+    }
+
+    class RealClass
+    {
+
+    }
+}

@@ -1,0 +1,595 @@
+﻿using EA;
+using RestFul;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace TrazabilidadDetallada
+{
+    class Utilities
+    {
+        EAUtils.EAUtils eaUtils;
+        public string stereotypeChildAs   = "Data";
+        public string stereotypeContainer = "DataContainer";
+
+        private List<Element> elementosExistentes = new List<Element>();
+        private int elementosExistenteIndex = -1;
+        private Package paqueteDestino;
+
+        public Utilities(EAUtils.EAUtils eautils )
+        {
+            this.eaUtils = eautils;
+        }
+
+        public Boolean existeRepositorio( Package package)
+        {
+            Package repositorio = null;
+            List <Package> packageRoute = new List<Package>();
+            try
+            {
+                repositorio = this.lookingForDataTarget(package, packageRoute);
+            }
+            catch (Exception) { }
+
+            return repositorio != null;
+        }
+        public Boolean existeRepositorio(Element element)
+        {
+            return existeRepositorio(eaUtils.repository.GetPackageByID(element.PackageID));
+        }
+
+        public void go(Package package)
+        {
+            walkPackage(package);
+        }
+
+        public Boolean go( Element elemento)
+        {
+            List<Package> packageRoute  = new List<Package>();
+            EA.Package    targetPackage = lookingForDataTarget(elemento, null, packageRoute);
+
+            if (targetPackage != null)
+            {
+                packageRoute.Reverse();
+
+                duplicatePackagesIfNotExists(eaUtils.repository.GetPackageByID(elemento.PackageID), packageRoute, targetPackage);
+
+                processElement(elemento, eaUtils.repository.GetPackageByID(elemento.PackageID), targetPackage);
+            }
+            return targetPackage != null;
+        }
+
+        private void walkPackage( Package walkingPackage)
+        {
+            EA.Collection elements = walkingPackage.Elements;
+
+            if (elements.Count != 0)
+            {
+                List<Package> packageRoute = new List<Package>();
+
+                EA.Package targetPackage = lookingForDataTarget((Element)elements.GetAt(0), null, packageRoute);
+
+                if( targetPackage != null)
+                {
+
+                    packageRoute.Reverse();
+                    duplicatePackagesIfNotExists(walkingPackage, packageRoute, targetPackage);
+
+                    for (short i = 0; i < elements.Count; i++)
+                    {
+                        if (targetPackage != null)
+                        {
+                            processElement((Element)elements.GetAt(i), walkingPackage, targetPackage);
+                        }
+                    }
+                }
+            }
+
+            EA.Collection packages;
+            packages = walkingPackage.Packages;
+
+            for (short i = 0; i < packages.Count; i++)
+            {
+                walkPackage((Package)packages.GetAt(i));
+            }
+        }
+
+        public void duplicatePackagesIfNotExists( Package sourcePackage, List<Package> packageRoute, Package targetPackage)
+        {
+            EA.Collection targetChildrenPackage;
+            EA.Package currentPackage;
+            EA.Package targetChildPackage;
+            EA.Package targetParentPackage;
+
+            var targetChildPackageExitis = false;
+
+            targetChildrenPackage = targetPackage.Packages;
+            targetChildPackage = targetPackage;
+            targetParentPackage = targetPackage;
+
+            for (var i = 0; i < packageRoute.Count; i++)
+            {
+                currentPackage = packageRoute[i];
+
+                targetChildPackageExitis = false;
+
+                if (targetChildrenPackage.Count != 0)
+                {
+                    for (short j = 0; j < targetChildrenPackage.Count; j++)
+                    {
+                        targetChildPackage = (Package)targetChildrenPackage.GetAt(j);
+
+                        // si hay un paquete con el mismo nombre sigo buscando en el proximo nivel de sus hijos.
+                        if (currentPackage.Element.Name == targetChildPackage.Element.Name)
+                        {
+                            targetChildrenPackage = targetChildPackage.Packages;
+                            targetChildPackageExitis = true;
+                            targetParentPackage = targetChildPackage;
+                            break;
+                        }
+                    }
+                    if (!targetChildPackageExitis)
+                    {
+                        targetParentPackage = eaUtils.packageUtils.addPackage(currentPackage.Element.Name, targetParentPackage, currentPackage.Element.Stereotype);
+                        targetChildrenPackage = targetParentPackage.Packages;
+                    }
+                }
+                else
+                {
+                    targetParentPackage = eaUtils.packageUtils.addPackage( currentPackage.Element.Name, targetParentPackage, currentPackage.Element.Stereotype);
+                    targetChildrenPackage = targetParentPackage.Packages;
+                }
+            }
+        }
+        public Package lookingForDataTarget(Element elemento, Package paquete, List<Package> packageRoute)
+        {
+            // el valor etiquetado data.target del paquete o del algun paquete padre debe tener este dato, 
+            //	sino no ejecuta 
+            Package targetPackage = null;
+
+            if (elemento != null)
+            {
+                paquete = eaUtils.repository.GetPackageByID(elemento.PackageID);
+            }
+
+            if (paquete != null)
+            {
+                packageRoute.Add(paquete);
+                string dataTarget = "";
+
+                if ( paquete.IsNamespace )
+                {
+                    dataTarget = MainConstants.DETAILED_REPOSITORY_GUiD;
+                }
+                else
+                {
+                    dataTarget = eaUtils.taggedValuesUtils.get(paquete.Element, "data.target", "").asString();
+                }
+
+                if (dataTarget == "")
+                {
+                    if (paquete.ParentID != 0)
+                    {
+                        targetPackage = lookingForDataTarget(null, eaUtils.repository.GetPackageByID(paquete.ParentID), packageRoute);
+                    }
+                }
+                else
+                {
+                    targetPackage = eaUtils.repository.GetPackageByGuid(dataTarget);
+                }
+            }
+            return targetPackage;
+        }
+
+        public Package lookingForDataTarget(Package paquete, List<Package> packageRoute)
+        {
+            // el valor etiquetado data.target del paquete o del algun paquete padre debe tener este dato, 
+            //	sino no ejecuta 
+            Package targetPackage = null;
+
+            if (paquete != null)
+            {
+                packageRoute.Add(paquete);
+
+                var dataTarget = "";
+
+                // desde el 11/11/2017 se deja de lado el valor etiquetado y se establece el namespace
+                // a su vez se establece el framework donde se encuentra el repositorio en el cual se 
+                // generan los elementos.
+                if (paquete.IsNamespace)
+                {
+                    dataTarget = MainConstants.DETAILED_REPOSITORY_GUiD;
+                }
+                else
+                {
+                    // desde el 11/11/2017 se agrega la posibilidad de no usar valor etiquetado.
+                    dataTarget = eaUtils.taggedValuesUtils.get(paquete.Element, "data.target", "").asString();
+                }
+
+                if (dataTarget == "")
+                {
+                    if (paquete.ParentID != 0)
+                    {
+                        targetPackage = lookingForDataTarget(null, eaUtils.repository.GetPackageByID(paquete.ParentID), packageRoute);
+                    }
+                }
+                else
+                {
+                    targetPackage = eaUtils.repository.GetPackageByGuid(dataTarget);
+                }
+            }
+            return targetPackage;
+        }
+
+        public void processElement(Element element, Package package, Package targetPackage)
+        {
+            if (element.Stereotype == "view")
+            {
+                // analizar: crea las columnas a partir del select de la vista.
+                ViewColumnGenerator viewColumnGenerator = new ViewColumnGenerator( eaUtils );
+
+                viewColumnGenerator.analizar(element);
+
+                stereotypeChildAs = "DBColumn";
+            }
+            else if (element.Stereotype == "table")
+            {
+                stereotypeChildAs = "DBColumn";
+            }
+
+            paqueteDestino = eaUtils.packageUtils.getChildPackageByName(targetPackage, package.Name);
+
+	        if( paqueteDestino != null )
+	        {
+
+                obtenerElementosExistentes();
+            }
+
+            sincronizar(element );
+        }
+
+        public void sincronizar( Element elemento )
+        {
+            if (existe(elemento))
+            {
+                actualizar(elemento);
+            }
+            else
+            {
+                crear(elemento);
+            }
+        }
+
+        private Boolean existe(Element elemento)
+        {
+            //int elementosExistenteIndex = -1;
+            EA.Element el;
+            Boolean existeElemento = false;
+
+            for (var i = 0; i < elementosExistentes.Count; i++)
+            {
+                el = elementosExistentes[i];
+
+                if ( eaUtils.taggedValuesUtils.get(el, "source.guid", "" ).asString() == elemento.ElementGUID)
+                {
+                    elementosExistenteIndex = i;
+                    existeElemento = true;
+                    break;
+                }
+            }
+            return existeElemento;
+        }
+
+        private Element getElementoExistente()
+        {
+            return elementosExistentes[elementosExistenteIndex];
+        }
+        
+        private ActionAndElement buscarAttributeAsElement( Element elementoActualizar, EA.Attribute attrOrigen )
+        {
+            Element atributoAsElemento;
+
+            ActionAndElement attActionAndElement = new ActionAndElement();
+            if(elementoActualizar.Elements.Count == 0)
+            {
+                attActionAndElement.actualizarCrear = true;
+            }
+            else
+            {
+                for (short i = 0; i < elementoActualizar.Elements.Count; i++)
+                {
+                    atributoAsElemento = (Element)elementoActualizar.Elements.GetAt(i);
+
+                    if (atributoAsElemento.Name == attrOrigen.Name)
+                    {
+                        if (eaUtils.taggedValuesUtils.get(atributoAsElemento, "source.guid", "").asString() != attrOrigen.AttributeGUID)
+                        {
+                            // Si el GUID es el mismo pero cambia el nombre quizas sea porque se reciclo el attributo
+                            // en ese caso NO es el mismo y se deberia considerar esta situacion.
+
+                            // @TODO agregar un issue para evidenciar el conflicto, pensar como solucionarlo.
+
+                            attActionAndElement.atributoAsElemento = null;
+                            attActionAndElement.actualizarCrear = false;
+                            break;
+                        }
+                        else
+                        {
+                            attActionAndElement.atributoAsElemento = atributoAsElemento;
+                            attActionAndElement.actualizarCrear = true;
+                            break;
+                        }
+                    }
+                    else if (eaUtils.taggedValuesUtils.get(atributoAsElemento, "source.guid", "").asString() == attrOrigen.AttributeGUID)
+                    {
+                        if (atributoAsElemento.Name != attrOrigen.Name)
+                        {
+                            // si el nombre es distinto pero el GUID es el mismo estamos en un caso similar al de arriba
+                            attActionAndElement.atributoAsElemento = atributoAsElemento;
+                            attActionAndElement.actualizarCrear = true;
+                            break;
+                        }
+                        else
+                        {
+                            attActionAndElement.atributoAsElemento = atributoAsElemento;
+                            attActionAndElement.actualizarCrear = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        attActionAndElement.actualizarCrear = true;
+                    }
+                }
+
+            }
+            return attActionAndElement;
+        }
+        private void actualizarAtributoAsElemento( Element atributoAsElemento, EA.Attribute attrOrigen)
+        {
+            // si ninguno de los 2 tiene alias les pongo el name del origen
+            // si el elemento no tiene alias y el origen lo tiene se lo agrego
+            // si el origen no tiene alias y el elemento lo tiene se lo agrego
+
+            if (atributoAsElemento.Alias.Length == 0 && attrOrigen.Alias.Length == 0)
+            {
+                atributoAsElemento.Alias = atributoAsElemento.Name;
+                attrOrigen.Alias = atributoAsElemento.Name;
+
+                atributoAsElemento.Update();
+                atributoAsElemento.Refresh();
+                attrOrigen.Update();
+            }
+
+            if (atributoAsElemento.Alias.Length == 0 && attrOrigen.Alias.Length != 0)
+            {
+                atributoAsElemento.Alias = attrOrigen.Alias;
+                atributoAsElemento.Update();
+                atributoAsElemento.Refresh();
+            }
+
+            if (atributoAsElemento.Alias.Length != 0 && attrOrigen.Alias.Length == 0)
+            {
+                attrOrigen.Alias = atributoAsElemento.Alias;
+                attrOrigen.Update();
+            }
+
+            atributoAsElemento.Notes = attrOrigen.Notes;
+            atributoAsElemento.Update();
+
+            // se agrega el type del atributo
+
+            string[] taggedValuesNames = { };
+            //busco los valores etiquetados de: precision, escala, etc.
+
+            string attrType = attrOrigen.Type;
+
+            if (eaUtils.repositoryConfiguration.getLanguage() == "en")
+            {
+                eaUtils.taggedValuesUtils.set(atributoAsElemento, EAUtils.TaggedValuesUtils.EN__TIPO_DATO, attrType);
+                taggedValuesNames = EAUtils.TaggedValuesUtils.EN_EXTEND_ATTRIBUTE_INFO;
+            }
+            else
+            {
+                eaUtils.taggedValuesUtils.set(atributoAsElemento, EAUtils.TaggedValuesUtils.ES__TIPO_DATO, attrType);
+                taggedValuesNames = EAUtils.TaggedValuesUtils.ES_EXTEND_ATTRIBUTE_INFO;
+            }
+
+            //Session.Output(toJSON(attrOrigen))
+
+            var sourceTaggedValues = attrOrigen.TaggedValues;
+            string sourceTaggedValueValue;
+            foreach (string taggedValuesName in taggedValuesNames)
+            {
+                sourceTaggedValueValue = "0";
+                try
+                {
+                    if (attrOrigen.Stereotype == "column")
+                    {
+                        if (taggedValuesName == ( eaUtils.repositoryConfiguration.getLanguage() == "en" ? EAUtils.TaggedValuesUtils.EN__PRECISION : EAUtils.TaggedValuesUtils.ES__PRECISION)  )
+                        {
+                            if (attrOrigen.Precision == "0" && attrOrigen.Length != "0")
+                            {
+                                sourceTaggedValueValue = attrOrigen.Length;
+                            }
+                            else
+                            {
+                                sourceTaggedValueValue = attrOrigen.Precision;
+                            }
+                        }
+                        else if (taggedValuesName == (eaUtils.repositoryConfiguration.getLanguage() == "en" ? EAUtils.TaggedValuesUtils.EN__ESCALA : EAUtils.TaggedValuesUtils.ES__ESCALA))
+                        {
+                            sourceTaggedValueValue = attrOrigen.Scale;
+                        }
+                    }
+                    else
+                    {
+                        sourceTaggedValueValue = eaUtils.taggedValuesUtils.get(attrOrigen, taggedValuesName, "").asString();
+                    }
+
+                    eaUtils.taggedValuesUtils.set(atributoAsElemento, taggedValuesName, sourceTaggedValueValue);
+                }
+                catch (Exception)
+                { }
+            }
+        }
+        private void actualizar(Element elementoOrigen)
+        {
+            Element elementoActualizar;
+
+            elementoActualizar = getElementoExistente();
+
+            EA.Attribute attrOrigen;
+            ActionAndElement attActionAndElement;
+
+            // busco el attr en elemento
+            // si no esta creo uno nuevo
+
+            for (short i = 0; i < elementoOrigen.Attributes.Count; i++)
+            {
+                attrOrigen = (EA.Attribute)elementoOrigen.Attributes.GetAt(i);
+
+                attActionAndElement = buscarAttributeAsElement(elementoActualizar, attrOrigen);
+        
+                if (attActionAndElement.actualizarCrear == true)
+                {
+                    if (attActionAndElement.atributoAsElemento != null)
+                    {
+                        actualizarAtributoAsElemento(attActionAndElement.atributoAsElemento, attrOrigen);
+                    }
+                    else
+                    {
+                        crearAtributoAsElemento(elementoActualizar, attrOrigen);
+                    }
+                }
+            }
+        }
+        public Element crearAtributoAsElemento(Element elementoContenedor, EA.Attribute attrsource)
+        {
+            var name = normalizaNombre(attrsource.Name);
+
+            Element atributo2Elemento = (Element) elementoContenedor.Elements.AddNew(name, "Class");
+
+            atributo2Elemento.Stereotype = stereotypeChildAs;
+
+            atributo2Elemento.SetAppearance(1, 3, 2);
+
+            atributo2Elemento.Update();
+
+            eaUtils.taggedValuesUtils.set(atributo2Elemento, "source.name", attrsource.Name);
+
+            eaUtils.taggedValuesUtils.set(atributo2Elemento, "source.guid", attrsource.AttributeGUID);
+
+            actualizarAtributoAsElemento(atributo2Elemento, attrsource);
+
+            return atributo2Elemento;
+        }
+
+        private void crear(Element elemento)
+        {
+            Element elementoNuevo;
+
+            elementoNuevo = (Element)paqueteDestino.Elements.AddNew(elemento.Name, "Class");
+
+            elementoNuevo.Stereotype = stereotypeContainer;
+
+            elementoNuevo.SetAppearance(1, 3, 3);
+
+            elementoNuevo.Update();
+
+            eaUtils.taggedValuesUtils.set(elementoNuevo, "source.guid", elemento.ElementGUID);
+            eaUtils.taggedValuesUtils.set(elementoNuevo, "source.name", elemento.Name);
+
+            paqueteDestino.Elements.Refresh();
+
+            EA.Connector conector;
+
+            conector = (EA.Connector)elementoNuevo.Connectors.AddNew("", "Dependency");
+
+            conector.ClientID = elementoNuevo.ElementID;
+            conector.SupplierID = elemento.ElementID;
+
+            conector.Update();
+            elementoNuevo.Connectors.Refresh();
+
+            elementosExistentes.Add(elementoNuevo);
+
+            EA.Collection attributes;
+            attributes = elemento.Attributes;
+
+            EA.Attribute atributo;
+            EA.Element atributo2Elemento;
+
+            for (short i = 0; i < attributes.Count; i++)
+            {
+                atributo = (EA.Attribute) attributes.GetAt(i);
+
+                atributo2Elemento = crearAtributoAsElemento(elementoNuevo, atributo);
+
+                elementoNuevo.Elements.Refresh();
+
+                conector = (EA.Connector)atributo2Elemento.Connectors.AddNew("", "Nesting");
+
+                conector.ClientID = atributo2Elemento.ElementID;
+                conector.SupplierID = elementoNuevo.ElementID;
+
+                conector.SupplierEnd.Cardinality = (atributo.LowerBound == atributo.UpperBound ? atributo.LowerBound : atributo.LowerBound + ".." + atributo.UpperBound);
+                conector.Update();
+
+                atributo2Elemento.Connectors.Refresh();
+
+            }
+            elemento.Attributes.Refresh();
+        }
+
+        private void obtenerElementosExistentes()
+        {
+            foreach (Element element in paqueteDestino.Elements)
+            {
+                elementosExistentes.Add(element);
+            }
+        }
+
+        private string normalizaNombre( string elementName)
+        {
+            var name = "";
+
+            if (elementName.IndexOf("_") == -1)
+            {
+                name = elementName;
+            }
+            else
+            {
+                string[] elementNameSplitted = elementName.Split('_');
+
+                name = elementNameSplitted[0].Substring(0, 1) + elementNameSplitted[0].Substring(1).ToLower();
+
+                if (elementNameSplitted.Length > 1)
+                {
+                    for (var i = 1; i < elementNameSplitted.Length; i++)
+                    {
+                        name += elementNameSplitted[i].Substring(0, 1).ToUpper() + elementNameSplitted[i].Substring(1).ToLower();
+                    }
+                }
+            }
+            return name;
+        }
+
+    }
+
+    class ActionAndElement
+    {
+        public Boolean actualizarCrear = false;
+        public Element atributoAsElemento;
+
+        public ActionAndElement()
+        {
+        }
+        public ActionAndElement(Boolean action, Element element)
+        {
+            actualizarCrear    = action;
+            atributoAsElemento = element;
+        }
+    }
+}

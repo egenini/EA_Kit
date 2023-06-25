@@ -1,0 +1,527 @@
+﻿using EA;
+using FastMember;
+using RestFul.builder;
+using RestFul.modelo;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+
+namespace RestFul
+{
+    class SwaggerMaster
+    {
+        public Swagger swagger = new Swagger();
+        EAUtils.EAUtils eaUtils;
+        JSONUtils jsonUtils;
+        Element swaggerClass;
+
+        public SwaggerMaster(EAUtils.EAUtils eaUtils)
+        {
+            this.eaUtils = eaUtils;
+            jsonUtils = new JSONUtils(eaUtils);
+        }
+
+        public string build()
+        {
+            SwaggerBuilder builder = new SwaggerBuilder( swagger, eaUtils, jsonUtils);
+
+            return builder.build(swaggerClass);
+        }
+
+        public Swagger readFromEA(Package rootPackage)
+        {
+            Package packageDefinition = this.getPackageDefinition(rootPackage);
+
+            if (packageDefinition != null)
+            {
+                swaggerClass = buscarSwaggerClass(rootPackage);
+                if (swaggerClass != null)
+                {
+                    obtenerDesdeSwaggerClass(swaggerClass);
+                }
+               
+                Element servicio = this.buscarServicio(packageDefinition);
+
+                if (servicio != null)
+                {
+                    // buscamos produces y consumes generales.
+                    leerProducesConsumes(servicio);
+
+                    Element uri = buscarUri(servicio);
+                    obtenerDesdeUri(uri);
+
+                    leerPaths(servicio);
+                }
+
+                Package packageMesssages = buscarPaqueteMensajes(packageDefinition);
+                if (packageMesssages != null)
+                {
+                    leerMensajes(packageMesssages);
+
+                    foreach( var definitionItem in this.swagger.entityDefinitions)
+                    {
+                        leerRelacionesMensaje(definitionItem.Value);
+                    }
+                    
+
+                }
+            }
+            return swagger;
+        }
+
+        private Package buscarPaqueteMensajes(Package packageDefinition)
+        {
+            Package package = null;
+
+            foreach( Package currentPackage in packageDefinition.Packages )
+            {
+                if( currentPackage.Name == "Mensajes" || currentPackage.Name == "Messages")
+                {
+                    package = currentPackage;
+                    break;
+                }
+            }
+            return package;
+        }
+
+        private void leerPaths(Element servicio)
+        {
+            Element interfaz;
+
+            // cada path es una interfaz, la interfaz se obtiene desde su instancia a en el servicio.
+            foreach (Element instancia in servicio.EmbeddedElements)
+            {
+                if ( instancia.ClassifierID != 0 )
+                {
+                    interfaz = eaUtils.repository.GetElementByID(instancia.ClassifierID);
+
+                    leerPath(interfaz,  instancia);
+                }
+            }
+        }
+
+        private void leerPath(Element interfaz, Element instancia)
+        {
+            Element definitionClass;
+
+            // la interfaz contiene el nombre del recurso, el nombre posta está en el alias
+            swagger.addPath(interfaz.Alias);
+
+            modelo.PathItem pathItem = swagger.getPath(interfaz.Alias);
+            // se pueden declara parámetros a nivel del path que aplican a todos los métodos.
+            //modelo.Parameter parameter = pathItem.addParameter(parametro.Name, parametro.Type);
+
+            modelo.Parameter parameter;
+
+            foreach (Method operacion in interfaz.Methods)
+            {
+                pathItem.setMethod(operacion.Name, operacion.Alias);
+
+                pathItem.currentOperation.summary = operacion.Notes;
+
+                // cada operación puede tener sus produces y consumes, en el modelo esto sería:
+                // la interfaz expuesta relacionada con un mediaType con una relación de
+                // realización para produces y una dependencia para consumes. si la relación no tiene rol
+                // entonces aplica a todas las operaciones, sino es particular a cada operación.
+
+                leerProducesConsumes( instancia, operacion.Name, pathItem);
+
+                leerResponses(interfaz, pathItem.currentOperation);
+
+                foreach (EA.Parameter parametro in operacion.Parameters)
+                {
+                    parameter = pathItem.currentOperation.addParameter(parametro.Name, parametro.Type );
+                    parameter.description = parametro.Notes;
+
+                    parameter.required = (bool)eaUtils.taggedValuesUtils.get(parametro, "required", "false").asBoolean();
+
+                    parameter.inType(eaUtils.taggedValuesUtils.get(parametro, "in", "").asString());
+
+                    if( parameter.paramenterIn.isInBody() )
+                    {
+                        // para determinar si hay una referencia hay que buscar las relaciones de dependencia de la interfaz,
+                        // con el rol que conincida con el nombre del método.
+                        int classifierId;
+                        if (int.TryParse(parametro.ClassifierID, out classifierId))
+                        {
+                            if (classifierId != 0)
+                            {
+                                definitionClass = eaUtils.repository.GetElementByID(classifierId);
+                                parameter.paramenterIn.inBody.schema.@ref = definitionClass.Name;
+
+                                //swagger.addDefinition(definitionClass);
+                            }
+                        }
+                        else
+                        {
+                            // buscamos por relación
+                            var elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(false, interfaz, EAUtils.ConnectorUtils.CONNECTOR__DEPENDENCY, null, "Class", null);
+                            Element elementFromConnector;
+                            Connector connector;
+
+                            foreach( var elementAndConnector in elementsAndConnectors )
+                            {
+                                elementFromConnector = (Element)elementAndConnector[0];
+                                connector = (Connector)elementAndConnector[1];
+
+                                if( connector.Name == operacion.Name && connector.SupplierEnd.Role.Contains("request"))
+                                {
+                                    parameter.paramenterIn.inBody.schema.@ref = elementFromConnector.Name;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        parameter.paramenterIn.notInBody.allowEmptyValue = (bool)eaUtils.taggedValuesUtils.get(parametro, "allowEmptyValue", "false").asBoolean();
+
+                        parameter.paramenterIn.notInBody.@default = eaUtils.taggedValuesUtils.get(parametro, "default", null).asString();
+
+                        string enunAsString = eaUtils.taggedValuesUtils.get(parametro, "enum", null).asString();
+                        if (enunAsString != null)
+                        {
+                            parameter.paramenterIn.notInBody.@enum = (List<Object>)jsonUtils.fromString(enunAsString);
+                        }
+                        
+                        parameter.paramenterIn.notInBody.exclusiveMaximum = eaUtils.taggedValuesUtils.get(parametro, "exclusiveMaximum", null).asBoolean();
+                        parameter.paramenterIn.notInBody.exclusiveMinimum = eaUtils.taggedValuesUtils.get(parametro, "exclusiveMinimum", null).asBoolean();
+                        parameter.paramenterIn.notInBody.format = eaUtils.taggedValuesUtils.get(parametro, "format", null).asString();
+                        parameter.paramenterIn.notInBody.maximum = eaUtils.taggedValuesUtils.get(parametro, "maximum", null).asInt();
+                        parameter.paramenterIn.notInBody.maxItems = eaUtils.taggedValuesUtils.get(parametro, "maxItems", null).asInt();
+                        parameter.paramenterIn.notInBody.maxLength = eaUtils.taggedValuesUtils.get(parametro, "maxLength", null).asInt();
+                        parameter.paramenterIn.notInBody.minimum = eaUtils.taggedValuesUtils.get(parametro, "minimum", null).asInt();
+                        parameter.paramenterIn.notInBody.minItems = eaUtils.taggedValuesUtils.get(parametro, "minItems", null).asInt();
+                        parameter.paramenterIn.notInBody.minLength = eaUtils.taggedValuesUtils.get(parametro, "minLength", null).asInt();
+                        parameter.paramenterIn.notInBody.multipleOf = eaUtils.taggedValuesUtils.get(parametro, "multipleOf", null).asInt();
+                        parameter.paramenterIn.notInBody.pattern = eaUtils.taggedValuesUtils.get(parametro, "pattern", null).asString();
+                        parameter.paramenterIn.notInBody.uniqueItems = eaUtils.taggedValuesUtils.get(parametro, "uniqueItems", null).asBoolean();
+                    }
+                }
+            }
+        }
+
+        private void leerMensajes( Package rootMessage )
+        {
+            Element mensaje;
+            foreach( Diagram diagram in rootMessage.Diagrams)
+            {
+                foreach( DiagramObject diagramObject in diagram.DiagramObjects )
+                {
+                    mensaje = eaUtils.repository.GetElementByID( diagramObject.ElementID );
+                    if ( mensaje.Type == "Class")
+                    {
+                        swagger.addEntityDefinition(mensaje);
+                    }
+                }
+            }
+
+            foreach( Package package in rootMessage.Packages )
+            {
+                leerMensajes( package );
+            }
+        }
+
+        /// <summary>
+        /// Busca por relaciones los atributos que se le deben agregar.
+        /// </summary>
+        /// <param name="entityDefinition"></param>
+        private void leerRelacionesMensaje(EntityDefinition entityDefinition)
+        {
+
+            List<System.Collections.ArrayList> elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(false, entityDefinition.element, EAUtils.ConnectorUtils.CONNECTOR__ASSOCIATION, null, "Class", null);
+
+            Element entity;
+            Connector connector;
+            string attributeName;
+
+            foreach (System.Collections.ArrayList elementAndConnector in elementsAndConnectors)
+            {
+                entity    = (Element)elementAndConnector[0];
+                connector = (Connector)elementAndConnector[1];
+
+                if( this.swagger.hasEntityDefinition(entity) )
+                {
+                    if (connector.SupplierEnd.Role.Length != 0)
+                    {
+                        attributeName = connector.SupplierEnd.Role;
+                    }
+                    else
+                    {
+                        attributeName = EAUtils.StringUtils.toCamel(entity.Name);
+                    }
+
+                    EAUtils.ConnectorUtils.Cardinality cardinality = eaUtils.connectorUtils.getCardinality(connector.SupplierEnd);
+
+                    Boolean? required = eaUtils.taggedValuesUtils.get(connector, "Obligatorio", null).asBoolean();
+
+                    entityDefinition.addAtributeByReference(attributeName, entity, required, cardinality.isCollection() );
+                }
+            }
+        }
+
+
+        public void leerResponses( Element interfaz, Operation operation )
+        {
+            List<System.Collections.ArrayList> elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(false, interfaz, "Dependency", null, "Class", null);
+
+            Element mensaje;
+            Connector connector;
+            string[] rolSplited;
+            string requestResponse;
+            string responseCode;
+
+            foreach (System.Collections.ArrayList elementAndConnector in elementsAndConnectors)
+            {
+                mensaje = (Element)elementAndConnector[0];
+                connector = (Connector)elementAndConnector[1];
+
+                if (connector.Name == operation._name )
+                {
+                    if (connector.SupplierEnd.Role.Contains('.'))
+                    {
+                        rolSplited      = connector.SupplierEnd.Role.Split('.');
+                        requestResponse = rolSplited[0];
+                        responseCode    = rolSplited[1];
+
+                        if( requestResponse == "response" )
+                        {
+                            EAUtils.ConnectorUtils.Cardinality cardinality = eaUtils.connectorUtils.getCardinality(connector.SupplierEnd);
+
+                            Response response = operation.addResponse( responseCode, mensaje, cardinality.isCollection(), eaUtils.taggedValuesUtils.get(connector, "description", null).asString());
+                            // agregar headers desde los valores etiquetados del connector.
+                            taggedValues2header(connector, response);
+                        }
+                    }
+                }
+            }
+        }
+        private void taggedValues2header(Connector connector, Response response)
+        {
+            string prefix = "header.";
+            Dictionary<string, string> headers = eaUtils.taggedValuesUtils.getByPrefix(connector, prefix);
+
+            string headerKey;
+            string objectName;
+            string objectPropertyName = null;
+            string currentObjectName = "";
+            ObjectAccessor wrapped = null;
+
+            string[] headerKeySplited; 
+
+            if ( headers.Count != 0 )
+            {
+                foreach (var item in headers)
+                {
+                    headerKey = item.Key.Replace(prefix, "");
+                    if( headerKey.Contains(".") )
+                    {
+                        headerKeySplited = headerKey.Split('.');
+                        objectName = headerKeySplited[0];
+                        objectPropertyName = headerKeySplited[1];
+                    }
+                    else
+                    {
+                        objectName = headerKey;
+                    }
+                    if(currentObjectName != objectName )
+                    {
+                        response.addHeader(objectName);
+                        currentObjectName = objectName;
+                        wrapped = ObjectAccessor.Create(response.currentHeader);
+                    }
+                    try
+                    {
+                        wrapped[objectPropertyName] = item.Value;
+                    }
+                    catch (Exception) { }
+                }
+            }
+            /*
+            foreach (var headerKey in json.paths[path][operationKey]["responses"][responseKey].headers)
+            {
+                foreach (var headerDataKey in json.paths[path][operationKey]["responses"][responseKey].headers[headerKey.Name])
+                {
+                    eaUtils.taggedValuesUtils.set(connector, "header." + headerKey.Name + "." + headerDataKey.Name, json.paths[path][operationKey]["responses"][responseKey].headers[headerKey.Name][headerDataKey.Name].asString);
+                }
+            }
+            */
+        }
+
+        private Element buscarSwaggerClass(Package rootPackage)
+        {
+            Element swaggerClass = null;
+            foreach (Element e in rootPackage.Elements)
+            {
+                if (e.Name == "Swagger")
+                {
+                    swaggerClass = e;
+                    break;
+                }
+            }
+            return swaggerClass;
+        }
+
+        private void obtenerDesdeUri(Element uri)
+        {
+            foreach (EA.Attribute atributo in uri.Attributes)
+            {
+                switch (atributo.Name)
+                {
+                    case "basePath":
+                        swagger.basePath = atributo.Default;
+                        break;
+                    case "host":
+                        swagger.host = atributo.Default;
+                        break;
+                    case "schema":
+                        swagger.schemes.AddRange(atributo.Default.Split(','));
+                        break;
+                }
+            }
+        }
+        private Element buscarUri(Element servicio)
+        {
+            Element uri = null;
+
+            // la uri esta relacionada con todas las interfaces expuestas.
+            foreach (Element interfaz in servicio.EmbeddedElements)
+            {
+                // buscar una asociación desde la interfaz al elemento uri.
+                List<System.Collections.ArrayList> elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(false, interfaz, null, null, null, "URI");
+                if (elementsAndConnectors.Count != 0)
+                {
+                    uri = (Element)elementsAndConnectors[0][0];
+                    break;
+                }
+            }
+            return uri;
+        }
+
+        private void obtenerDesdeSwaggerClass(Element swaggerClass)
+        {
+            // buscamos las clases que contienen estos atributos por su conector de asociacion.
+            // Info, Contact y Licence
+
+            List<System.Collections.ArrayList> elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(false, swaggerClass, EAUtils.ConnectorUtils.CONNECTOR__ASSOCIATION, null, "Class", null);
+            Element elmentClass;
+
+            swagger.version = eaUtils.getAttributeDefaultValue(swaggerClass, "swagger");
+
+            foreach (System.Collections.ArrayList elementAndConnector in elementsAndConnectors)
+            {
+                elmentClass = (Element)elementAndConnector[0];
+
+                if (elmentClass.Name == "Info")
+                {
+                    swagger.info.description = eaUtils.getAttributeDefaultValue(elmentClass, "description");
+                    swagger.info.termsOfService = eaUtils.getAttributeDefaultValue(elmentClass, "termsOfService");
+                    swagger.info.title = eaUtils.getAttributeDefaultValue(elmentClass, "title");
+                    swagger.info.version = eaUtils.getAttributeDefaultValue(elmentClass, "version");
+
+                    List<System.Collections.ArrayList> elementsAndConnectorsOfInfo = eaUtils.connectorUtils.getFromConnectorFilter(false , elmentClass, EAUtils.ConnectorUtils.CONNECTOR__ASSOCIATION, null, "Class", null);
+                    foreach (System.Collections.ArrayList elementAndConnectorOfInfo in elementsAndConnectorsOfInfo)
+                    {
+                        elmentClass = (Element)elementAndConnectorOfInfo[0];
+                        if (elmentClass.Name == "Contact")
+                        {
+                            swagger.info.contact.email = eaUtils.getAttributeDefaultValue(elmentClass, "email");
+                            swagger.info.contact.name = eaUtils.getAttributeDefaultValue(elmentClass, "name");
+                            swagger.info.contact.url = eaUtils.getAttributeDefaultValue(elmentClass, "url");
+                        }
+                        if (elmentClass.Name == "Licence")
+                        {
+                            swagger.info.license.name = eaUtils.getAttributeDefaultValue(elmentClass, "name");
+                            swagger.info.license.url = eaUtils.getAttributeDefaultValue(elmentClass, "url");
+                        }
+                    }
+                }
+            }
+        }
+
+        private Element buscarServicio(Package packageDefinition)
+        {
+            return eaUtils.packageUtils.getChildElementByStereotype(packageDefinition, "Servicio");
+        }
+
+        private Package getPackageDefinition(Package rootPackage)
+        {
+            Package packageDefinition = eaUtils.packageUtils.getChildPackageByName(rootPackage, "Definición");
+            if (packageDefinition == null)
+            {
+                packageDefinition = eaUtils.packageUtils.getChildPackageByName(rootPackage, "Definition");
+                if (packageDefinition == null)
+                {
+                    packageDefinition = eaUtils.packageUtils.getChildPackageByName(rootPackage, "Definicion");
+                }
+                else
+                {
+                    // abrir ventana para que se busque el paquete donde está el servicio.
+                }
+            }
+            return packageDefinition;
+        }
+
+        public void leerProducesConsumes(Element servicio)
+        {
+            List<System.Collections.ArrayList> elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(true, servicio, "Realisation", null, null, "mediaType");
+            Element element;
+            foreach (System.Collections.ArrayList elementAndConnector in elementsAndConnectors)
+            {
+                element = (Element)elementAndConnector[0];
+
+                swagger.produces.Add(element.Name);
+            }
+
+            elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(true, servicio, "Dependency", null, null, "mediaType");
+            foreach (System.Collections.ArrayList elementAndConnector in elementsAndConnectors)
+            {
+                element = (Element)elementAndConnector[0];
+
+                swagger.consumes.Add(element.Name);
+            }
+        }
+
+        public void leerProducesConsumes( Element instancia, string operacionName, PathItem pathItem)
+        {
+            List<System.Collections.ArrayList> elementsAndConnectors;
+
+            // produces
+            elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(false, instancia, EAUtils.ConnectorUtils.CONNECTOR__REALIZATION, null, null, "mediaType");
+            Element element;
+            Connector connector;
+            foreach (System.Collections.ArrayList elementAndConnector in elementsAndConnectors)
+            {
+                element   = (Element)elementAndConnector[0];
+                connector = (Connector)elementAndConnector[1];
+
+                if (connector.SupplierEnd.Role == "")
+                {
+                    pathItem.produces.Add(element.Name);
+                }
+                else if ( connector.SupplierEnd.Role == operacionName )
+                {
+                    pathItem.currentOperation.produces.Add(element.Name);
+                }
+            }
+
+            // consumes
+            elementsAndConnectors = eaUtils.connectorUtils.getFromConnectorFilter(false, instancia, EAUtils.ConnectorUtils.CONNECTOR__DEPENDENCY, null, null, "mediaType");
+            foreach (System.Collections.ArrayList elementAndConnector in elementsAndConnectors)
+            {
+                element = (Element)elementAndConnector[0];
+                connector = (Connector)elementAndConnector[1];
+
+                if (connector.SupplierEnd.Role == "")
+                {
+                    pathItem.currentOperation.consumes.Add(element.Name);
+                }
+                else if (connector.SupplierEnd.Role == operacionName)
+                {
+                    pathItem.currentOperation.consumes.Add(element.Name);
+                }
+            }
+        }
+    }
+}

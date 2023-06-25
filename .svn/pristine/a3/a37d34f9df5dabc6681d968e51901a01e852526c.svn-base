@@ -1,0 +1,45 @@
+﻿using EA;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace EAUtils
+{
+    public class AttributeUtils
+    {
+        Repository repository;
+
+        public AttributeUtils(Repository repository)
+        {
+            this.repository = repository;
+        }
+
+        public static EA.Attribute synchronize(Element  element, string name, string type, string value )
+        {
+            EA.Attribute attribute = null;
+
+            foreach( EA.Attribute current in element.Attributes)
+            {
+                if ( current.Name == name )
+                {
+                    attribute = current;
+                    break;
+                }
+            }
+
+            if( attribute == null )
+            {
+                attribute = element.Attributes.AddNew(name, type == null ? "": type);
+                attribute.Update();
+                element.Attributes.Refresh();
+            }
+
+            attribute.Default = value == null ? "" : value;
+            attribute.Type = type == null ? "" : type;
+            attribute.Update();
+
+            return attribute;
+        }
+    }
+}

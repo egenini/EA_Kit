@@ -1,0 +1,122 @@
+﻿using EA;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace EAUtils
+{
+    public class PackageUtils
+    {
+        public Repository repository;
+
+        public PackageUtils(Repository repository )
+        {
+            this.repository = repository;
+        } 
+
+        public Package add( string name, Package parent )
+        {
+            Package newPackage = parent.Packages.AddNew(name, "");
+            newPackage.Update();
+            return newPackage;
+        }
+
+        public Package add(string name, Package parent, string stereotype)
+        {
+            Package newPackage = parent.Packages.AddNew(name, "");
+            newPackage.Update();
+            if ( stereotype != null && stereotype != "")
+            {
+                newPackage.Element.Stereotype = stereotype;
+                newPackage.Update();
+            }
+            
+            return newPackage;
+        }
+        /*
+        public Element addElement( string name, string type, string stereotype, Package parent)
+        {
+            Element newElement = parent.Elements.AddNew(name, type);
+
+            if ( stereotype != null && stereotype.Length != 0)
+            {
+                newElement.Stereotype = stereotype;
+            }
+            newElement.Update();
+            parent.Elements.Refresh();
+            return newElement;
+        }
+        */
+        public Package getChildPackageByName( Package parentPackage, string packageName )
+        {
+            Package childPackage = null;
+
+            foreach( Package package in parentPackage.Packages )
+            {
+                if( package.Name == packageName )
+                {
+                    childPackage = package;
+                    break;
+                }
+            }
+            if( childPackage == null)
+            {
+                foreach (Package package in parentPackage.Packages)
+                {
+                    childPackage = this.getChildPackageByName(package, packageName);
+
+                    if (childPackage != null)
+                    {
+                        break;
+                    }
+                }
+            }
+            return childPackage;
+        }
+
+        public Element getChildElementByStereotype(Package parentPackage, string elementStereotype)
+        {
+            Element childElement = null;
+
+            foreach ( Element element in parentPackage.Elements )
+            {
+                if (element.Stereotype == elementStereotype)
+                {
+                    childElement = element;
+                    break;
+                }
+            }
+            return childElement;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="package"></param>
+        /// <param name="type">Tipo de elemento a buscar</param>
+        /// <param name="stereotype">Estereotipo del elemento a buscar</param>
+        /// <param name="name">Nombre del elemento a buscar</param>
+        /// <param name="onlyOne">¿Buscamos sólo 1?</param>
+        /// <returns></returns>
+        public List<Object> getElementFromFilter( Package package, string type, string stereotype, string name, bool onlyOne )
+        {
+            List<Object> elements = new List<Object>();
+
+            foreach (Element current in package.Elements)
+            {
+                if( ( type == null || ( type != null && type == current.Type )) 
+                    && ( stereotype == null || ( stereotype != null && current.Stereotype == stereotype ) )
+                    && ( name == null || ( name != null && current.Name == name)) )
+                {
+                    elements.Add(current);
+                    if (onlyOne)
+                    {
+                        break;
+                    }
+                } 
+            }
+            return elements;
+        }
+    }
+}

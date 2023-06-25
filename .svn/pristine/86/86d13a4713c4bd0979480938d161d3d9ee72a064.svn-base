@@ -1,0 +1,165 @@
+﻿using DMN.framework;
+using EA;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Resources;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace DMN
+{
+    /// <summary>
+    /// Responsable por el comportamiento de la presentación de las opciones de menú y los métodos básicos.
+    /// </summary>
+    public class MainCommons : MainUtils
+    {
+        private bool m_ShowFullMenus = false;
+
+        const string addinName = "DMN";
+
+        const string menuHeader = "-&" + addinName;
+
+        public ResourceManager resourceManager = null;
+
+        //protected const string ITEM_MENU__EXPORTAR = "Exportar a DMN 1.1.xml";
+        /*
+        protected const string ITEM_MENU__AGREGAR_VARIABLE = "Agregar variable";
+        protected const string ITEM_MENU__EDITOR_VARIABLE = "Abrir editor de variable";
+        protected const string ITEM_MENU__ENUM2CSV_MENU = "Enumeración al porta papeles como CSV";
+        protected const string ITEM_MENU__ENUM2CSV__NAME = "Usar el nombre";
+        protected const string ITEM_MENU__ENUM2CSV__ALIAS = "Usar el alias";
+        protected const string ITEM_MENU__GENERAR_MENU = "Generar";
+        protected const string ITEM_MENU__GENERAR_DMN_XML = "Generar .dmn";
+        protected const string ITEM_MENU__GENERAR_CODIGO = "Generar código fuente";
+        protected const string ITEM_MENU__CREAR_ENUMERACION = "Crear enumeraciones desde variable";
+        */
+        private string[] ITEM_MENU_GENERAR_SUBMENU = { Properties.Resources.ITEM_MENU__GENERAR_CODIGO, Properties.Resources.ITEM_MENU__GENERAR_DMN_XML };
+        private string[] ITEM_MENU_ENUM2CSV_SUBMENU = { Properties.Resources.ITEM_MENU__ENUM2CSV__ALIAS, Properties.Resources.ITEM_MENU__ENUM2CSV__NAME };
+
+
+        protected EAUtils.EAUtils eaUtils;
+
+        public String EA_Connect(EA.Repository Repository)
+        {
+            //Thread.CurrentThread.CurrentUICulture = new CultureInfo("en");
+
+            // No special processing req'd
+            eaUtils = new EAUtils.EAUtils();
+            this.framework = new Framework(eaUtils);
+
+            resourceManager = new ResourceManager(typeof(Properties.Resources));
+
+            return "DMN";
+        }
+
+        public void EA_FileOpen(EA.Repository repository)
+        {
+        }
+
+
+        public bool isProjectOpen(EA.Repository repository)
+        {
+            try
+            {
+                eaUtils.setRepositorio(repository);
+                eaUtils.createOutput("DMN");
+                int i = repository.Datatypes.Count;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        
+        public void EA_ShowHelp(EA.Repository Repository, string Location, string MenuName, string ItemName)
+        {
+            MessageBox.Show("Help for: " + MenuName + "/" + ItemName);
+        }
+
+        public object EA_GetMenuItems(EA.Repository Repository, string Location, string MenuName)
+        {
+            if (MenuName == "")
+            {
+                return menuHeader;
+            }
+            else if (MenuName == menuHeader)
+            {
+                string[] ar = { "-" + Properties.Resources.ITEM_MENU__GENERAR_MENU, Properties.Resources.ITEM_MENU__AGREGAR_VARIABLE, Properties.Resources.ITEM_MENU__EDITOR_VARIABLE, "-" + Properties.Resources.ITEM_MENU__ENUM2CSV_MENU, Properties.Resources.ITEM_MENU__CREAR_ENUMERACION };
+                return ar;
+            }
+            else if (MenuName == "-" + Properties.Resources.ITEM_MENU__GENERAR_MENU)
+            {
+                return ITEM_MENU_GENERAR_SUBMENU;
+            }
+            else if (MenuName == "-" + Properties.Resources.ITEM_MENU__ENUM2CSV_MENU)
+            {
+                return ITEM_MENU_ENUM2CSV_SUBMENU;
+            }
+            
+            return "";
+        }
+
+        public void EA_GetMenuState(EA.Repository repository, string location, string menuName, string itemName, ref bool isEnabled, ref bool IsChecked)
+        {
+            if (isProjectOpen(repository))
+            {
+                if (itemName == Properties.Resources.ITEM_MENU__GENERAR_CODIGO)
+                {
+                    isEnabled = this.getBusinessKnowledgeSelected(repository, location) != null;
+                }
+                else if (itemName == Properties.Resources.ITEM_MENU__AGREGAR_VARIABLE)
+                {
+                    isEnabled = this.getBusinessKnowledgeSelected(repository, location) != null;
+                }
+                else if (itemName == Properties.Resources.ITEM_MENU__EDITOR_VARIABLE)
+                {
+                    isEnabled = true;
+                }
+                else if (itemName == Properties.Resources.ITEM_MENU__CREAR_ENUMERACION)
+                {
+                    isEnabled = this.getVariableSelected(repository, location) != null;
+                }
+                else if (itemName == Properties.Resources.ITEM_MENU__ENUM2CSV__ALIAS || itemName == Properties.Resources.ITEM_MENU__ENUM2CSV__NAME)
+                {
+                    isEnabled = this.getSelected(repository, location, "Enumeration", null) != null;
+                }
+            }
+            else
+            {
+                // If no open project, disable all menu options
+                isEnabled = false;
+            }
+        }
+
+        /*
+        * http://sparxsystems.com/enterprise_architect_user_guide/13.0/automation/ea_getribboncategory.html
+        */
+
+        public string EA_GetRibbonCategory(Repository repository)
+        {
+            return "Design";
+        }
+        
+
+        // http://sparxsystems.com/enterprise_architect_user_guide/13.0/automation/ea_onretrievemodeltemplate.html
+
+        public string EA_OnRetrieveModelTemplate(Repository repository, string location)
+        {
+            string template = "";
+
+            MessageBox.Show("Plantilla solicitada " + location);
+
+            return template;
+        }
+
+        public void EA_Disconnect()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+    }
+}

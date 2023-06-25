@@ -1,0 +1,152 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using RestFul.modelo;
+
+namespace RestFul.ui
+{
+    public partial class SwaggerMain : UserControl
+    {
+        public SwaggerMain()
+        {
+            InitializeComponent();
+        }
+        SwaggerMaster swaggerMaster;
+        Swagger swagger;
+
+        bool initSettings = false;
+
+        internal void setSwaggerMaster(SwaggerMaster swaggerMaster)
+        {
+            this.swaggerMaster = swaggerMaster;
+
+            swagger = swaggerMaster.swagger;
+
+            initSettings = true;
+
+            this.control_basePath_textBox.Text = swagger.basePath;
+            this.control_host_textBox.Text     = swagger.host;
+            this.control_swagger_textBox.Text  = swagger.version;
+
+            this.control_https_checkBox.Checked = swagger.schemes.Contains(Swagger.SCHEMA__HTTPS);
+            this.control_http_checkBox.Checked  = swagger.schemes.Contains(Swagger.SCHEMA__HTTP);
+            this.control_ws_checkBox.Checked    = swagger.schemes.Contains(Swagger.SCHEMA__WS);
+            this.control_wss_checkBox.Checked   = swagger.schemes.Contains(Swagger.SCHEMA__WSS);
+
+            this.control_basePath_textBox.Enabled = true;
+            this.control_host_textBox.Enabled     = true;
+            //this.control_swagger_textBox.Enabled = true;
+
+            this.control_https_checkBox.Enabled = true;
+            this.control_http_checkBox.Enabled  = true;
+            this.control_ws_checkBox.Enabled    = true;
+            this.control_wss_checkBox.Enabled   = true;
+
+            initSettings = false;
+        }
+
+        internal void disable()
+        {
+            this.control_basePath_textBox.Enabled = false;
+            this.control_host_textBox.Enabled     = false;
+            this.control_swagger_textBox.Enabled  = false;
+
+            this.control_https_checkBox.Enabled = false;
+            this.control_http_checkBox.Enabled  = false;
+            this.control_ws_checkBox.Enabled    = false;
+            this.control_wss_checkBox.Enabled   = false;
+        }
+
+        public bool haveChanges()
+        {
+            return isHostChanged() || isBasePathChanged() || isHttpChanged() || isHttpsChanged() || isWsChanged() || isWssChanged();
+        }
+
+        private bool isHostChanged()
+        {
+            return swagger.host != this.control_host_textBox.Text;
+        }
+
+        private bool isBasePathChanged()
+        {
+            return swagger.basePath != this.control_basePath_textBox.Text;
+        }
+
+        private bool isHttpChanged()
+        {
+            return this.control_http_checkBox.Checked != swagger.schemes.Contains(Swagger.SCHEMA__HTTP);
+        }
+        private bool isHttpsChanged()
+        {
+            return this.control_https_checkBox.Checked != swagger.schemes.Contains(Swagger.SCHEMA__HTTPS);
+        }
+        private bool isWsChanged()
+        {
+            return this.control_ws_checkBox.Checked != swagger.schemes.Contains(Swagger.SCHEMA__WS);
+        }
+        private bool isWssChanged()
+        {
+            return this.control_wss_checkBox.Checked != swagger.schemes.Contains(Swagger.SCHEMA__WSS);
+        }
+
+        public void guardar()
+        {
+            if ( isHostChanged() )
+            {
+                this.swaggerMaster.serviceModel.synchronizeHost(this.control_host_textBox.Text);
+            }
+
+            if (isBasePathChanged() )
+            {
+                this.swaggerMaster.serviceModel.synchronizeBasePath(this.control_basePath_textBox.Text);
+            }
+
+            if( isHttpChanged())
+            {
+                this.swaggerMaster.serviceModel.synchronizeSchema("http", this.control_http_checkBox.Checked, this.control_host_textBox.Text, this.control_basePath_textBox.Text);
+            }
+            if (isHttpsChanged())
+            {
+                this.swaggerMaster.serviceModel.synchronizeSchema("https", this.control_https_checkBox.Checked, this.control_host_textBox.Text, this.control_basePath_textBox.Text);
+            }
+            if( isWsChanged())
+            {
+                this.swaggerMaster.serviceModel.synchronizeSchema("ws", this.control_ws_checkBox.Checked, this.control_host_textBox.Text, this.control_basePath_textBox.Text);
+            }
+            if (isWssChanged())
+            {
+                this.swaggerMaster.serviceModel.synchronizeSchema("wss", this.control_wss_checkBox.Checked, this.control_host_textBox.Text, this.control_basePath_textBox.Text);
+            }
+        }
+
+        private void control_host_textBox_Leave(object sender, EventArgs e)
+        {
+        }
+
+        private void control_basePath_textBox_Leave(object sender, EventArgs e)
+        {
+        }
+
+        private void control_http_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void control_https_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void control_ws_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void control_wss_checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+    }
+}

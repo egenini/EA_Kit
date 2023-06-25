@@ -1,0 +1,126 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Xml;
+using Newtonsoft.Json;
+using UIResources;
+
+namespace Productividad
+{
+    public partial class JsonXmlViewer : UserControl
+    {
+        public static string JSON_WINDOW_NAME = "Ver JSON";
+        public static string XML_WINDOW_NAME = "Ver XML";
+        private Main caller;
+        private Boolean asJson = false;
+        private System.Xml.Linq.XNode xmlDoc;
+        private string jsonSource;
+
+        public JsonXmlViewer()
+        {
+            InitializeComponent();
+            this.AutoSize = true;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        }
+
+        public void setJson( string json, Main caller )
+        {
+            this.caller           = caller;
+            this.asJson           = true;
+            this.jsonSource       = json;
+            this.toPascal.Checked = true;
+        }
+
+        public void setXml(string json, Main caller )
+        {
+            this.caller           = caller;
+            this.jsonSource       = json;
+            this.toPascal.Checked = true;
+        }
+
+        private void toPascal_CheckedChanged(object sender, EventArgs e)
+        {
+            this.refreshView();
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            this.refreshView();
+        }
+
+        private void toSnake_CheckedChanged(object sender, EventArgs e)
+        {
+            this.refreshView();
+        }
+
+        private void toDot_CheckedChanged(object sender, EventArgs e)
+        {
+            this.refreshView();
+        }
+
+        private void refresh_Click(object sender, EventArgs e)
+        {
+            this.jsonSource = caller.jsonViewerRefreshCallback();
+
+            if( this.jsonSource.Length != 0)
+            {
+                this.refreshView();
+            }
+            
+        }
+
+        private void refreshView()
+        {
+            treeView1.Nodes.Clear();
+
+            string normalized = "";
+            if (this.toPascal.Checked)
+            {
+                normalized = EAUtils.StringUtils.toPascal(this.jsonSource);
+            }
+            else if (this.toCamel.Checked)
+            {
+                normalized = EAUtils.StringUtils.toCamel(this.jsonSource);
+            }
+            else if (this.toSnake.Checked)
+            {
+                normalized = EAUtils.StringUtils.toSnake(this.jsonSource);
+            }
+            else if (this.toDot.Checked)
+            {
+                normalized = EAUtils.StringUtils.toPoint(this.jsonSource);
+            }
+
+            if ( asJson )
+            {
+                this.textBox1.Text = normalized;
+                this.textBox1.Refresh();
+                JsonTreeViewLoader.LoadJsonToTreeView(this.treeView1, normalized);
+            }
+            else
+            {
+                xmlDoc = JsonConvert.DeserializeXNode(normalized, "Root");
+
+                string xml = xmlDoc.ToString();
+
+                this.textBox1.Text = xml;
+                this.textBox1.Refresh();
+
+                XmlUtils.xmlUtils(this.treeView1, xmlDoc);
+            }
+        }
+
+        private void copiar_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(this.textBox1.Text);
+            Alert.Success("Copiado al porta papeles");
+        }
+    }
+}

@@ -1,0 +1,251 @@
+using EA;
+using System;
+using System.Windows.Forms;
+
+namespace Productividad
+
+{
+    /// <summary>
+    /// Responsable de implementar el comportamiento particular del addin, normalmente delegándolo.
+    /// </summary>
+    public class Main : MainCommons
+    {
+
+        private JsonXmlViewer viewJson = null;
+        private JsonXmlViewer viewXml = null;
+
+        /// <summary>
+        /// Dejamos este método acá para tener a mano la llamada que se hace.
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="location"></param>
+        /// <param name="menuName"></param>
+        /// <param name="itemName"></param>
+        public void EA_MenuClick(EA.Repository repository, string location, string menuName, string itemName)
+        {
+            switch (itemName)
+            {
+                case ITEM_MENU__VER_MENSAJE_AS_JSON:
+
+                    showViewAs(repository, true);
+
+                    break;
+                case ITEM_MENU__VER_MENSAJE_AS_XML:
+
+                    showViewAs(repository, false);
+
+                    break;
+                case ITEM_MENU__GENERAR_CODIGO:
+
+                    pasteEnumCode(repository, location);
+
+                    break;
+                case ITEM_MENU__INSTANCIAR_DESDE_CONECTOR:
+
+                    simpleInstantiation(repository);
+
+                    break;
+            }
+        }
+
+        // *************************
+        // *** Opciones de menú. ***
+        // *************************
+
+        private void pasteEnumCode(Repository repository, string location)
+        {
+            Element enumElement = this.getEnumSelected(repository, location);
+
+            BuilderManager builder = new BuilderManager(repository, enumElement);
+            builder.go();
+        }
+
+        private void showViewAs(Repository repository, Boolean viewAsJson)
+        {
+            ObjectType ot = repository.GetContextItemType();
+            Element rootElement = null;
+            switch (ot)
+            {
+                case ObjectType.otElement:
+                    rootElement = (Element) repository.GetContextObject();
+                    break;
+                case EA.ObjectType.otPackage:
+
+                    break;
+
+                case EA.ObjectType.otDiagram:
+                    break;
+                default:
+                    break;
+            }
+
+            if( rootElement != null && rootElement.Type == "Class")
+            {
+                string json = jutils.toString(rootElement);
+                if (viewAsJson)
+                {
+                    if( viewJson == null)
+                    { 
+                        viewJson = (JsonXmlViewer)repository.AddWindow(JsonXmlViewer.JSON_WINDOW_NAME, "Productividad.JsonXmlViewer");
+                        viewJson.Show();
+                        repository.ShowAddinWindow(JsonXmlViewer.JSON_WINDOW_NAME);
+                    }
+                    
+                    viewJson.setJson(json, this);
+                }
+                else
+                {
+                    if (viewXml == null)
+                    {
+                        viewXml = (JsonXmlViewer)repository.AddWindow(JsonXmlViewer.XML_WINDOW_NAME, "Productividad.JsonXmlViewer");
+                        viewXml.Show();
+                        repository.ShowAddinWindow(JsonXmlViewer.XML_WINDOW_NAME);
+                    }
+                    try
+                    {
+                        viewXml.setXml(json, this);
+                    }
+                    catch(Exception e)
+                    {
+                        eaUtils.printOut(e.ToString());
+                    }
+                }
+            }
+        }
+
+        public void simpleInstantiation( Repository repository)
+        {
+            Connector connector = this.getConnectorInstantiationSelected(repository);
+            Element origen = repository.GetElementByID(connector.ClientID);
+            Element destino = repository.GetElementByID(connector.SupplierID);
+            origen.ClassifierID = destino.ElementID;
+            origen.Update();
+        }
+
+        public string jsonViewerRefreshCallback()
+        {
+            string json = "";
+            try
+            {
+                Element rootElement = (Element)this.eaUtils.repository.GetContextObject();
+
+                if (rootElement != null && rootElement.Type == "Class")
+                {
+                    json = jutils.toString(rootElement);
+                }
+            }
+            catch (Exception e)
+            {
+            }
+            return json;
+        }
+
+        // Suscripcion a eventos 
+        public void EA_OnContextItemChanged(EA.Repository repository, String GUID, EA.ObjectType ot)
+        {
+            switch (ot)
+            {
+                case EA.ObjectType.otElement:
+                    break;
+
+                case EA.ObjectType.otPackage:
+                    break;
+
+                case EA.ObjectType.otDiagram:
+                    break;
+
+                case EA.ObjectType.otAttribute:
+                    break;
+
+                case EA.ObjectType.otMethod:
+                    break;
+
+                case EA.ObjectType.otConnector:
+                    break;
+
+                case EA.ObjectType.otRepository:
+                    break;
+
+            }
+        }
+        public Boolean EA_OnPostNewElement(Repository repository, EventProperties info)
+        {
+            Boolean changed = false;
+
+            if (repository != null && info != null)
+            {
+                Element elemento = repository.GetElementByID(int.Parse((string)info.Get("ElementID").Value));
+
+                //MessageBox.Show("EA_OnPostNewElement - Conectores del elemento: " + elemento.Connectors.Count);
+
+            }
+            return changed;
+        }
+
+        public Boolean EA_OnPostNewDiagramObject(EA.Repository repository, EA.EventProperties info)
+        {
+            Boolean changed = false;
+
+            if (repository != null && info != null)
+            {
+                try
+                {
+                    Element       elemento           = repository.GetElementByID(int.Parse((string)info.Get("ID").Value));
+                    Diagram       diagrama           = repository.GetDiagramByID(int.Parse((string)info.Get("DiagramID").Value));
+                    DiagramObject objetoDelDiagrama = diagrama.GetDiagramObjectByID(elemento.ElementID, (string)info.Get("DUID").Value);
+
+                    //MessageBox.Show("EA_OnPostNewDiagramObject - Conectores del elemento: " + elemento.Connectors.Count);
+                }
+                catch (Exception) { }
+            }
+            return changed;
+        }
+
+        public Boolean EA_OnPreNewConnector(Repository repository, EventProperties info)
+        {
+            Boolean add = true;
+
+            if (repository != null && info != null)
+            {
+                //Connector connector = repository.GetConnectorByID(int.Parse((string)info.Get("ConnectorID").asString));
+            }
+            return add;
+        }
+
+        public Boolean EA_OnPostNewConnector(Repository repository, EventProperties info)
+        {
+            Boolean changed = false;
+
+            if (repository != null && info != null)
+            {
+                Diagram diagrama = repository.GetCurrentDiagram();
+
+                Connector connector = repository.GetConnectorByID(int.Parse((string)info.Get("ConnectorID").Value));
+
+                if (diagrama.MetaType.Contains("APIRestResumen"))
+                {
+                    if( connector.Type == "Dependency")
+                    {
+                        Element origen = repository.GetElementByID(connector.ClientID);
+                        Element destino = repository.GetElementByID(connector.SupplierID);
+
+                        //MessageBox.Show("Productividad post connector create - origen " + origen.Name +" destino "+ destino.Name);
+                    }
+                }
+
+                if(connector.Type == EAUtils.ConnectorUtils.CONNECTOR__INSTANTIATION)
+                {
+                    Element origen = repository.GetElementByID(connector.ClientID);
+                    Element destino = repository.GetElementByID(connector.SupplierID);
+                    origen.ClassifierID = destino.ElementID;
+                    if( origen.Type.Contains("Interface") )
+                    {
+                        origen.Name = destino.Name;
+                    }
+                    origen.Update();
+                }
+            }
+            return changed;
+        }
+	}
+}
